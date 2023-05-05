@@ -9,6 +9,22 @@ const mypageRoutes = require("./routes/mypage");
 
 const app = express();
 
+passportConfig();
+app.user(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -35,8 +35,11 @@ CREATE TABLE wiki_history (
     editor_id VARCHAR(10) NOT NULL,
     text_pointer text,
     edited_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_rollback INT DEFAULT 0, 
     FOREIGN KEY (editor_id) REFERENCES users(user_id)
 );
+
+
 
 CREATE TABLE celebrities (
     celebrity_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -78,3 +81,4 @@ CREATE TABLE celebrity_request(
     request_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (requester_id) REFERENCES users(user_id)
 );
+
