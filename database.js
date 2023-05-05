@@ -1,16 +1,18 @@
-import mysql from "mysql2";
-import dotenv from "dotenv";
+const mysql = require("mysql2/promise");
+const dotenv = require("dotenv");
 dotenv.config();
 
-const pool = mysql
-  .createPool({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-  })
-  .promise();
+const pool = mysql.createPool({
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+});
 
+exports.getUsers = async () => {
+  const [rows] = await pool.query("SELECT * FROM users");
+  return rows;
+};
 /* 예시코드 */
 
 /* export async function getNotes() {
