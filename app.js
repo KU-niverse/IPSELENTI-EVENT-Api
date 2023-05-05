@@ -1,37 +1,25 @@
 const express = require("express");
-const getUser = require("./database");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const userRoutes = require("./routes/user");
+const commentRoutes = require("./routes/comment");
+const wikiRoutes = require("./routes/wiki");
+const eventRoutes = require("./routes/event");
+const mypageRoutes = require("./routes/mypage");
 
 const app = express();
 
-app.use(express.json());
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/users", async (req, res) => {
-  const users = await getUser.getUsers();
-  res.send(users);
-});
+app.use("/user", userRoutes);
+app.use("/comment", commentRoutes);
+app.use("/wiki", wikiRoutes);
+app.use("/event", eventRoutes);
+app.use("/mypage", mypageRoutes);
 
-app.get("/notes", async (req, res) => {
-  const notes = await getNotes();
-  res.send(notes);
-});
-
-app.get("/notes/:id", async (req, res) => {
-  const id = req.params.id;
-  const note = await getNote(id);
-  res.send(note);
-});
-
-app.post("/notes", async (req, res) => {
-  const { title, contents } = req.body;
-  const note = await createNote(title, contents);
-  res.status(201).send(note);
-});
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!shit");
-});
-
-app.listen(8080, () => {
-  console.log("Server is running on port 8080");
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

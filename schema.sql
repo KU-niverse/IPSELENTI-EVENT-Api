@@ -4,8 +4,8 @@ USE IPSELENTI_EVENT_Api;
 CREATE TABLE users (
     user_id VARCHAR(10) PRIMARY KEY,
     name VARCHAR(15) NOT NULL,
-    password VARCHAR(30) NOT NULL,
-    phone_number VARCHAR(20) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL UNIQUE,
     recommender_id VARCHAR(10),
     point INT DEFAULT 0,
     bad INT DEFAULT 0,
