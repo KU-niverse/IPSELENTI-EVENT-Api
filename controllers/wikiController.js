@@ -8,8 +8,11 @@ exports.contentsGetMid = async (req, res) => {
 
     // 가장 최근 버전의 파일 읽어서 jsonData에 저장
     fs.readFile(`./documents/${rows[0].text_pointer}.wiki`, 'utf8', (err, data) => {
+        // 없는 파일 요청 시 에러 처리
         if (err) {
-            console.log(err);
+            res.status(404).send({
+                message: "File not found"
+            });
             return;
         }
 
@@ -18,8 +21,7 @@ exports.contentsGetMid = async (req, res) => {
 
         jsonData['version'] = rows[0].text_pointer;
         jsonData['text'] = text;
-        res.send(jsonData);
-
+        res.status(200).send(jsonData);
     });
 };
 
@@ -30,6 +32,7 @@ exports.contentsPostMid = async (req, res) => {
         res.status(400).send({
             message: "Content can't be empty"
         });
+        return;
     }
 
     const rows = await Wiki_history.readRecent();
@@ -39,6 +42,7 @@ exports.contentsPostMid = async (req, res) => {
             message: "Version is not matched",
             newContent: req.body.newContent
         });
+        return;
     }
 
     // 전체 글 저장하는 새 파일(버전) 만들기
@@ -48,7 +52,14 @@ exports.contentsPostMid = async (req, res) => {
 
 
     fs.writeFile(updatedFileName, newContent, (err) => {
-        if (err) throw err;
+        // 파일 쓰다가 에러난 경우
+        if (err) {
+            res.status(432).send({
+                message: "Something went wrong while writing file",
+                newContent: req.body.newContent
+            });
+            return;
+        }
         console.log('The file has been updated!');
     });
 
@@ -75,7 +86,14 @@ exports.contentsSectionGetMid = async (req, res) => {
 
     // 정규화로 섹션 분리
     fs.readFile(`./documents/${rows[0].text_pointer}.wiki`, 'utf8', (err, contents) => {
-        if (err) throw err;
+        // 없는 파일 요청 시 에러 처리
+        if (err) {
+            res.status(404).send({
+                message: "File not found"
+            });
+            return;
+        }
+
         const lines = contents.split(/\r?\n/);
         let currentSection = null;
         let currentContent = null;
@@ -114,7 +132,7 @@ exports.contentsSectionGetMid = async (req, res) => {
             jsonData['version'] = rows[0].text_pointer;
             jsonData['title'] = section.title;
             jsonData['content'] = section.content.join('\n');
-            res.send(jsonData)
+            res.status(200).send(jsonData)
         } catch (err) {
             res.status(422).send({ error: 'Invalid section number' });
         };
@@ -176,7 +194,14 @@ exports.contentsSectionPostMid = async (req, res) => {
         }
     }).on('close', () => {
         fs.writeFile(updatedFileName, fileContent.replace(/\s+$/, ''), (err) => {
-            if (err) throw err;
+            // 파일 쓰다가 에러난 경우
+            if (err) {
+                res.status(432).send({
+                    message: "Something went wrong while writing file",
+                    newContent: req.body.newContent
+                });
+                return;
+            }
             console.log('The file has been updated!');
         });
     });
@@ -215,7 +240,7 @@ exports.historyVersionGetMid = async (req, res) => {
             res.status(404).send({
                 message: "File not found"
             });
-            return ;
+            return;
         }
 
         const lines = data.split(/\r?\n/);
@@ -237,7 +262,14 @@ exports.historyVersionPostMid = async (req, res) => {
     const originalFileName = `./document/r${req.params.version}.wiki`;
 
     fs.copyFile(originalFileName, updatedFileName, (err) => {
-        if (err) throw err;
+        if (err) {
+            // 파일 쓰다가 에러난 경우
+            res.status(432).send({
+                message: "Something went wrong while writing file",
+                newContent: req.body.newContent
+            });
+            return;
+        }
         console.log('rollback success!');
     });
 
@@ -252,4 +284,3 @@ exports.historyVersionPostMid = async (req, res) => {
     const rows_history = await Wiki_history.create(newWiki_history);
 };
 
-// 수정 내용 불러오기

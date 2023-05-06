@@ -1,13 +1,4 @@
-const mysql = require("mysql2/promise");
-const dotenv = require("dotenv");
-dotenv.config();
-
-const pool = mysql.createPool({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-});
+const pool = require("../config/db.js")
 
 // wiki_history 테이블의 column을 가지는 객체
 const Wiki_history = function (wiki_history) {
