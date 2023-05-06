@@ -1,6 +1,6 @@
 const bycrypt = require("bcrypt");
 const passport = require("passport");
-const User = require("../models/userModel.js");
+const User = require("../../models/userModel.js");
 
 //회원가입
 exports.signUp = async (req, res, next) => {

@@ -10,8 +10,6 @@ exports.isNotSignedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     next();
   } else {
-    const message = encodeURIComponent("로그인한 상태입니다.");
-
     return res
       .status(201)
       .json({ success: true, message: "로그인한 상태입니다." });
