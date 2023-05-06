@@ -125,9 +125,8 @@ exports.contentsSectionGetMid = async (req, res) => {
 
         // 섹션 번호에 맞는 섹션 불러오기, 유효하지 않은 번호일 경우 에러 처리
         try {
-            section = sections[parseInt(req.params.section)];
+            section = sections[parseInt(req.params.section) - 1];
             console.log(sections)
-            console.log(section.title);
             jsonData = {};
             jsonData['version'] = rows[0].text_pointer;
             jsonData['title'] = section.title;
@@ -166,7 +165,7 @@ exports.contentsSectionPostMid = async (req, res) => {
     const latestVersion = parseInt(rows[0].text_pointer.substring(1));
     const updatedFileName = `./document/r${latestVersion + 1}.wiki`;
     const fileName = `./document/r${latestVersion}.wiki`;
-    const updatedSectionIndex = index;
+    const updatedSectionIndex = index - 1;
     const newContent = req.body.newContent;
 
     const rl = readline.createInterface({
