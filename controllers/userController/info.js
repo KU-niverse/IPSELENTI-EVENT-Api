@@ -1,5 +1,5 @@
 const User = require("../../models/userModel.js");
-
+//유저가 로그인 되었을때만 접근 가능
 exports.info = (req, res, err) => {
   res.status(200).json({ success: true, user: req.user[0] });
 
