@@ -77,6 +77,6 @@ exports.signIn = async (req, res, next) => {
 
 exports.signOut = (req, res) => {
   req.logout(() => {
-    res.status(200).send({ message: "로그아웃 되었습니다." });
+    res.status(200).send({ success: true, message: "로그아웃 되었습니다." });
   });
 };
