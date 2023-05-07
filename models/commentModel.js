@@ -8,7 +8,7 @@ const Comment = function(comment) {
 }
 
 // id 넣어주면 해당 id의 comment 반환하는 함수
-Comment.getComment = async (id) => {
+async function getComment (id) {
     const [rows] = await pool.query(`SELECT * FROM comments WHERE comment_id = ?`, [id]);
     return rows[0];
 }
@@ -28,7 +28,6 @@ Comment.deleteComment = async (id) => {
             console.log("Comment를 찾을 수 없습니다.")
             return;
         }
-
         console.log("deleted comment with id: ", id);
         return;
     });
@@ -36,22 +35,20 @@ Comment.deleteComment = async (id) => {
 
 // comment의 좋아요를 증가시키는 함수
 Comment.likeComment = async (comment, liker) => {
-    const [flag] = await pool.query(`SELECT * FROM comments_like WHERE comment_id=? AND liker_id=?`, [comment, liker]);
-    if (![flag]) {
-        const result = 0 //error?
-    } else {
-        const [result] = await pool.query(`UPDATE comments SET likes_count = likes_count + 1 WHERE comment_id=?`, [comment], (err, res) => {
-            if(err) {
-                console.log("error: ", err);
-                return;
-            }
-            console.log("update likes with id: ", comment);
-        });
-    return result;
-    }
+    await pool.query(`SELECT * FROM comments_like WHERE comment_id=? AND liker_id=?`, [comment, liker], function(err, flag) {
+        const numRows = flag.length;
+        if (!numRows) {
+            const result = 0 // 중복된 좋아요
+            return result;
+        } else {
+            const result_1 = pool.query(`INSERT INTO comments_like(comment_id, liker_id) VALUES (?, ?)`, [comment, liker]);
+            const result_2 = pool.query(`UPDATE comments SET likes_count = likes_count + 1 WHERE comment_id=?`, [comment]);
+            return result_1 + result_2
+        }
+    });
 };
 
-// 댓글을 최신순으로 정렬하여 반환하는 함수
+// 댓글을 최신순으로 정렬하여 반환하는 함수 22
 Comment.orderByTime = async () => {
     const [rows] = await pool.query(`SELECT * FROM comments ORDER BY comment_time DESC`);
     return rows;

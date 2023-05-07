@@ -4,17 +4,18 @@ const Comment = require('../models/commentModel.js');
 exports.commentPostMid = async (req, res) => {
     try {
         // 빈 내용 요청 시 에러 처리
-        if (req.body) {
+        if (!req.body) {
             res.status(400).send({
                 message: "Content can't be empty."
             });
+        } else {
+            const newComment = new Comment({
+                author: req.body.author,
+                comment_content: req.body.comment_content,
+            })
+            const id = await Comment.createComment(newComment);
+            res.status(200).send("생성 성공");
         }
-        const newComment = new Comment({
-            author: req.body.author,
-            comment_content: req.body.comment_content,
-        })
-        const id = await Comment.createComment(newComment);
-        res.status(200).send("생성 성공");
     } catch (error) {
         console.error(error);
         res.status(400).send();
@@ -24,7 +25,7 @@ exports.commentPostMid = async (req, res) => {
 // 댓글 삭제하기
 exports.commentDeleteMid = async (req, res) => {
     try {
-        await Comment.deleteComment(req.params.comment_id);
+        await Comment.deleteComment(req.body.comment_id);
         res.status(200).send("삭제 성공");
     } catch (error) {
         console.error(error);
@@ -35,8 +36,15 @@ exports.commentDeleteMid = async (req, res) => {
 // 좋아요
 exports.commentLikePostMid = async (req, res) => {
     try {
-        await Comment.likeComment(req.params.comment_id, req.params.liker_id);
-        res.status(200).send("좋아요 성공");
+        result = await Comment.likeComment(req.body.comment_id, req.body.liker_id);
+        if (result) {
+            res.status(200).send("좋아요 성공");
+        }
+        else {
+            res.status(400).send({
+                message: "Duplicate Like"
+            });
+        }
     } catch (error) {
         console.error(error);
         res.status(400).send();
