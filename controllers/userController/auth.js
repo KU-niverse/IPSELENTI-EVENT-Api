@@ -15,7 +15,7 @@ exports.signUp = async (req, res, next) => {
         .json({ success: false, message: "이미 가입된 학번입니다." });
     }
     //가입하지 않았다면, 추천인이 실재 존재하는 id인지 확인
-    else if (exRecommender.length == 0) {
+    else if (recommender_id != "" && exRecommender.length == 0) {
       return res
         .status(422)
         .json({ success: false, message: "추천인이 존재하지 않습니다." });
