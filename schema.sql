@@ -36,6 +36,7 @@ CREATE TABLE wiki_history (
     text_pointer text,
     edited_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_rollback INT DEFAULT 0, 
+    content_summary VARCHAR(255), /* 추가된 column */
     FOREIGN KEY (editor_id) REFERENCES users(user_id)
 );
 
