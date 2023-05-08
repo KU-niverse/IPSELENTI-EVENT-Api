@@ -9,7 +9,7 @@ module.exports = () => {
   });
 
   passport.deserializeUser((id, done) => {
-    User.find_user_id(id)
+    User.find_user(id)
       .then((user) => done(null, user))
       .catch((err) => done(err));
   });

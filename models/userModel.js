@@ -13,7 +13,7 @@ class User {
   }
 }
 
-User.find_user_id = async (user_id) => {
+User.find_user = async (user_id) => {
   const [rows] = await pool.query(`SELECT * FROM users WHERE user_id = ?`, [
     user_id,
   ]);
