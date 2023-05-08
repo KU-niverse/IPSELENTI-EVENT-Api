@@ -1,7 +1,9 @@
 const User = require("../../models/userModel.js");
 //유저가 로그인 되었을때만 접근 가능
 exports.info = (req, res, err) => {
+  console.log(req.user);
   res.status(200).json({ success: true, user: req.user[0] });
+  return;
   //만약 한 유저가 다른 유저 정보 찾는 것 필요하다면 아래 코드 활용
   /* User.find_user_id(req.params.user_id)
     .then((user) => {
@@ -12,8 +14,14 @@ exports.info = (req, res, err) => {
       res.status(400).json({ success: false, err: "해당 유저가 없음" });
       return;
     }); */
+};
+exports.wikiHistorys = async (req, res, err) => {
+  console.log("hear1");
+  const userHistory = await User.wikiHistorys(req.user[0].user_id);
+  res.status(200).json({
+    success: true,
+    wikiHistory: userHistory,
+  });
 
-  exports.historys = (req, res, err) => {
-    res.status(200).json({ success: true, user: req.user[0] });
-  };
+  console.log("hear2");
 };
