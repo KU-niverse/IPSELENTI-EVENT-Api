@@ -26,12 +26,11 @@ User.create = async (newUser) => {
 };
 
 User.wikiHistorys = async (user_id) => {
-  console.log(typeof user_id);
   const [rows] = await pool.query(
     "SELECT * FROM wiki_history WHERE editor_id = ?",
     [user_id]
   );
-  console.log(rows);
+
   return rows;
 };
 

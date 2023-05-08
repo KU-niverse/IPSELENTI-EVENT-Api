@@ -13,7 +13,7 @@ const userRoutes = require("./routes/user");
 /* const commentRoutes = require("./routes/comment");
 const wikiRoutes = require("./routes/wiki");
 const eventRoutes = require("./routes/event"); */
-const mypageRoutes = require("./routes/user/mypage");
+const mypageRoutes = require("./routes/user/myPage");
 
 dotenv.config();
 const app = express();
