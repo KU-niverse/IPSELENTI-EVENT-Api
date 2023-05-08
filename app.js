@@ -12,9 +12,8 @@ const passportConfig = require("./passport");
 const userRoutes = require("./routes/user");
 /* const commentRoutes = require("./routes/comment");
 const wikiRoutes = require("./routes/wiki");
-const eventRoutes = require("./routes/event");
+const eventRoutes = require("./routes/event"); */
 const mypageRoutes = require("./routes/mypage");
- */
 
 dotenv.config();
 const app = express();
@@ -45,8 +44,8 @@ app.use(passport.session());
 app.use("/user", userRoutes);
 /* app.use("/comment", commentRoutes);
 app.use("/wiki", wikiRoutes);
-app.use("/event", eventRoutes);
-app.use("/mypage", mypageRoutes); */
+app.use("/event", eventRoutes);*/
+app.use("/mypage", mypageRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

@@ -25,4 +25,10 @@ User.create = async (newUser) => {
   return rows;
 };
 
+User.find_wiki = async (user_id) => {
+  const [rows] = await pool.query("SELECT * FROM wiki WHERE editor_id = ?", [
+    user_id,
+  ]);
+};
+
 module.exports = User;
