@@ -5,6 +5,7 @@ const Wiki_history = function (wiki_history) {
     this.editor_id = wiki_history.editor_id;
     this.text_pointer = wiki_history.text_pointer;
     this.is_rollback = wiki_history.is_rollback;
+    this.content_summary = wiki.content_summary;
 }
 
 // id 넣어주면 해당 id의 wiki_history를 반환해주는 함수

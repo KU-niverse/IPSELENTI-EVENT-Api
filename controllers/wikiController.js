@@ -16,11 +16,87 @@ exports.contentsGetMid = async (req, res) => {
             return;
         }
 
+        // 원래 통으로 가져오는 코드
+        // const lines = data.split(/\r?\n/);
+        // const text = lines.join('\n');
+
+        // jsonData['version'] = rows[0].text_pointer;
+        // jsonData['text'] = text;
+        // res.status(200).send(jsonData);
+
+        const sections = [];
         const lines = data.split(/\r?\n/);
-        const text = lines.join('\n');
+        let currentSection = null;
+        let currentContent = null;
+        const numbers = [];
+        
+        // 파일 읽고 section 나누기
+        for (let line of lines) {
+            const matches = line.match(/^(\={2,})\s+(.+?)\s+\1\s*$/); // 정규식 패턴에 맞는지 검사합니다.
+            if (matches !== null) { // 해당 라인이 섹션 타이틀인 경우
+                numbers.push(matches[1].length - 1);
+                if (currentSection !== null) {
+                    currentSection.content.push(currentContent);
+                    sections.push(currentSection);
+                }
+                currentSection = {
+                    title: matches[2],
+                    content: []
+                };
+                currentContent = '';
+            } else { // 해당 라인이 섹션 내용인 경우
+                if (currentContent !== '') {    // 빈 줄이면
+                    currentContent += '\n';
+                }
+                currentContent += line;
+            }
+        }
+
+        if (currentSection !== null) {    // 마지막 섹션 push
+            currentSection.content.push(currentContent);
+            sections.push(currentSection);
+        }
+
+        let content_json = [];  // content의 메타데이터와 데이터 
+        let numList = [];   // index의 리스트
+        let idx = 1;        // 가장 상위 목차
+
+        // 인덱싱
+        for (let i = 0; i < numbers.length; i++) {
+            let section_dic = {} // section : section, index : index, title: title, content: content
+            section_dic['section'] = (i+1).toString;
+            const num = numbers[i];
+
+            if (num === 1) {    // 가장 상위 목차가 변경됐을 경우
+                numList = [idx++];
+                section_dic['index'] = numList[0].toString();
+            } else {
+                if (num > numList.length) { // 하위 목차로 들어갈 때
+                    while (numList.length < num) numList.push(1);
+                } else {
+                    while (numList.length > 0 && num < numList.length) {    // depth가 똑같아질 때까지 pop
+                        numList.pop();
+                    }
+                    let tmp = numList[numList.length - 1];      // 한 단계 올리기
+                    numList.pop();
+                    numList.push(tmp + 1);
+                }
+                section_dic['index'] = numList.join(".");
+            }
+            
+            // title과 content 저장
+            section_dic['title'] = sections[i].title;
+            let content_text = '';
+            for (let content of sections[i].content) {
+                content_text += content;
+            }
+            section_dic['content'] = content_text;
+
+            content_json.push(section_dic);
+        }
 
         jsonData['version'] = rows[0].text_pointer;
-        jsonData['text'] = text;
+        jsonData['content'] = content_json;
         res.status(200).send(jsonData);
     });
 };
@@ -68,7 +144,8 @@ exports.contentsPostMid = async (req, res) => {
     const newWiki_history = new Wiki_history({
         editor_id: req.body.editor_id,
         text_pointer: `r${latestVersion + 1}`,
-        is_rollback: 0
+        is_rollback: 0,
+        content_summary: req.body.content_summary
     });
 
 
@@ -209,7 +286,8 @@ exports.contentsSectionPostMid = async (req, res) => {
     const newWiki_history = new Wiki_history({
         editor_id: req.body.editor_id,
         text_pointer: `r${latestVersion + 1}`,
-        is_rollback: is_rollback
+        is_rollback: 0,
+        content_summary: req.body.content_summary
     });
 
 
@@ -276,7 +354,8 @@ exports.historyVersionPostMid = async (req, res) => {
     const newWiki_history = new Wiki_history({
         editor_id: req.body.editor_id,
         text_pointer: `r${latestVersion + 1}`,
-        is_rollback: req.params.version
+        is_rollback: req.params.version,
+        content_summary: req.body.content_summary
     });
 
 
