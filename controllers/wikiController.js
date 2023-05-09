@@ -17,19 +17,17 @@ exports.contentsGetMid = async (req, res) => {
         }
 
         // 원래 통으로 가져오는 코드
-        // const lines = data.split(/\r?\n/);
-        // const text = lines.join('\n');
+        const lines = data.split(/\r?\n/);
+        const text = lines.join('\n');
 
-        // jsonData['version'] = rows[0].text_pointer;
-        // jsonData['text'] = text;
-        // res.status(200).send(jsonData);
+        jsonData['version'] = rows[0].text_pointer;
+        jsonData['text'] = text;
 
         const sections = [];
-        const lines = data.split(/\r?\n/);
         let currentSection = null;
         let currentContent = null;
         const numbers = [];
-        
+
         // 파일 읽고 section 나누기
         for (let line of lines) {
             const matches = line.match(/^(\={2,})\s+(.+?)\s+\1\s*$/); // 정규식 패턴에 맞는지 검사합니다.
@@ -64,7 +62,7 @@ exports.contentsGetMid = async (req, res) => {
         // 인덱싱
         for (let i = 0; i < numbers.length; i++) {
             let section_dic = {} // section : section, index : index, title: title, content: content
-            section_dic['section'] = (i+1).toString;
+            section_dic['section'] = (i + 1).toString();
             const num = numbers[i];
 
             if (num === 1) {    // 가장 상위 목차가 변경됐을 경우
@@ -83,7 +81,7 @@ exports.contentsGetMid = async (req, res) => {
                 }
                 section_dic['index'] = numList.join(".");
             }
-            
+
             // title과 content 저장
             section_dic['title'] = sections[i].title;
             let content_text = '';
@@ -95,8 +93,7 @@ exports.contentsGetMid = async (req, res) => {
             content_json.push(section_dic);
         }
 
-        jsonData['version'] = rows[0].text_pointer;
-        jsonData['content'] = content_json;
+        jsonData['contents'] = content_json;
         res.status(200).send(jsonData);
     });
 };
@@ -104,12 +101,12 @@ exports.contentsGetMid = async (req, res) => {
 // 전체 글 수정하기
 exports.contentsPostMid = async (req, res) => {
     // 빈 내용 요청 시 에러 처리
-    if (req.body) {
-        res.status(400).send({
-            message: "Content can't be empty"
-        });
-        return;
-    }
+    // if (req.body===undefined) {
+    //     res.status(400).send({
+    //         message: "Content can't be empty"
+    //     });
+    //     return;
+    // }
 
     const rows = await Wiki_history.readRecent();
     // 버전 불일치 시 에러 처리(누가 이미 수정했을 경우)
@@ -123,7 +120,7 @@ exports.contentsPostMid = async (req, res) => {
 
     // 전체 글 저장하는 새 파일(버전) 만들기
     const latestVersion = parseInt(rows[0].text_pointer.substring(1));
-    const updatedFileName = `./document/r${latestVersion + 1}.wiki`;
+    const updatedFileName = `./documents/r${latestVersion + 1}.wiki`;
     const newContent = req.body.newContent;
 
 
@@ -145,14 +142,20 @@ exports.contentsPostMid = async (req, res) => {
         editor_id: req.body.editor_id,
         text_pointer: `r${latestVersion + 1}`,
         is_rollback: 0,
-        content_summary: req.body.content_summary
+        //content_summary: req.body.content_summary
     });
 
 
     const rows_history = await Wiki_history.create(newWiki_history);
 
+    console.log(rows_history);
+
 
     // TODO : point 주는 api 요청
+
+    res.status(200).send({
+        message: "Successfully updated",
+    });
 };
 
 
@@ -220,11 +223,14 @@ exports.contentsSectionGetMid = async (req, res) => {
 // 섹션 수정하기
 exports.contentsSectionPostMid = async (req, res) => {
     // 빈 내용 요청 시 에러 처리
-    if (req.body) {
-        res.status(400).send({
-            message: "Content can't be empty"
-        });
-    }
+    // console.log(req.body);
+
+    // if (req.body===undefined) {
+    //     res.status(400).send({
+    //         message: "Content can't be empty"
+    //     });
+    //     return;
+    // }
 
     const rows = await Wiki_history.readRecent();
     // 버전 불일치 시 에러 처리(누가 이미 수정했을 경우)
@@ -233,6 +239,7 @@ exports.contentsSectionPostMid = async (req, res) => {
             message: "Version is not matched",
             newContent: req.body.newContent
         });
+        return;
     }
 
     // 섹션 수정하고 새 파일(버전) 만들기
@@ -240,58 +247,67 @@ exports.contentsSectionPostMid = async (req, res) => {
     const readline = require('readline');
 
     const latestVersion = parseInt(rows[0].text_pointer.substring(1));
-    const updatedFileName = `./document/r${latestVersion + 1}.wiki`;
-    const fileName = `./document/r${latestVersion}.wiki`;
+    const updatedFileName = `./documents/r${latestVersion + 1}.wiki`;
+    const fileName = `./documents/r${latestVersion}.wiki`;
     const updatedSectionIndex = index - 1;
     const newContent = req.body.newContent;
 
-    const rl = readline.createInterface({
-        input: fs.createReadStream(fileName),
-        crlfDelay: Infinity
-    });
-
-    let fileContent = '';
-    let currentSectionIndex = -1;
-
-    let flag = 0;
-
-    rl.on('line', (line) => {
-        if (/^(\={2,})\s+(.+?)\s+\1\s*$/.test(line)) {
-            currentSectionIndex++;
-        }
-        if (currentSectionIndex === updatedSectionIndex & flag === 0) {
-            fileContent += newContent + '\n';
-            flag = 1;
-        } else if (currentSectionIndex === updatedSectionIndex & flag === 1) {
-
-        }
-        else {
-            fileContent += line + '\n';
-        }
-    }).on('close', () => {
-        fs.writeFile(updatedFileName, fileContent.replace(/\s+$/, ''), (err) => {
-            // 파일 쓰다가 에러난 경우
-            if (err) {
-                res.status(432).send({
-                    message: "Something went wrong while writing file",
-                    newContent: req.body.newContent
-                });
-                return;
-            }
-            console.log('The file has been updated!');
+    try {
+        const rl = readline.createInterface({
+            input: fs.createReadStream(fileName),
+            crlfDelay: Infinity
         });
-    });
 
-    // 새로운 히스토리 생성
-    const newWiki_history = new Wiki_history({
-        editor_id: req.body.editor_id,
-        text_pointer: `r${latestVersion + 1}`,
-        is_rollback: 0,
-        content_summary: req.body.content_summary
-    });
+        let fileContent = '';
+        let currentSectionIndex = -1;
 
+        let flag = 0;
 
-    const rows_history = await Wiki_history.create(newWiki_history);
+        rl.on('line', (line) => {
+            if (/^(\={2,})\s+(.+?)\s+\1\s*$/.test(line)) {
+                currentSectionIndex++;
+            }
+            if (currentSectionIndex === updatedSectionIndex & flag === 0) {
+                fileContent += newContent + '\n';
+                flag = 1;
+            } else if (currentSectionIndex === updatedSectionIndex & flag === 1) {
+
+            }
+            else {
+                fileContent += line + '\n';
+            }
+        }).on('close', () => {
+            fs.writeFile(updatedFileName, fileContent.replace(/\s+$/, ''), (err) => {
+                // 파일 쓰다가 에러난 경우
+                if (err) {
+                    res.status(432).send({
+                        message: "Something went wrong while writing file",
+                        newContent: req.body.newContent
+                    });
+                    return;
+                }
+                console.log('The file has been updated!');
+            });
+        });
+
+        // 새로운 히스토리 생성
+        const newWiki_history = new Wiki_history({
+            editor_id: req.body.editor_id,
+            text_pointer: `r${latestVersion + 1}`,
+            is_rollback: 0,
+            //content_summary: req.body.content_summary
+        });
+
+        const rows_history = await Wiki_history.create(newWiki_history);
+        console.log(rows_history);
+
+    } catch (err){
+        res.status(432).send({
+            message: "Something went wrong while making history",
+            newContent: req.body.newContent
+        });
+        return;
+    }
 
     // point 주는 api 요청
 
@@ -335,8 +351,9 @@ exports.historyVersionPostMid = async (req, res) => {
 
     // 전체 글 저장하는 새 파일(버전) 만들기
     const latestVersion = parseInt(rows[0].text_pointer.substring(1));
-    const updatedFileName = `./document/r${latestVersion + 1}.wiki`;
-    const originalFileName = `./document/r${req.params.version}.wiki`;
+    const rollbackVersion = parseInt(req.params.version[1]);
+    const updatedFileName = `./documents/r${latestVersion + 1}.wiki`;
+    const originalFileName = `./documents/r${rollbackVersion}.wiki`;
 
     fs.copyFile(originalFileName, updatedFileName, (err) => {
         if (err) {
@@ -354,11 +371,15 @@ exports.historyVersionPostMid = async (req, res) => {
     const newWiki_history = new Wiki_history({
         editor_id: req.body.editor_id,
         text_pointer: `r${latestVersion + 1}`,
-        is_rollback: req.params.version,
-        content_summary: req.body.content_summary
+        is_rollback: rollbackVersion,
+        //content_summary: req.body.content_summary
     });
 
-
     const rows_history = await Wiki_history.create(newWiki_history);
+    console.log(rows_history);
+
+    res.status(200).send({
+        message: "Rollback is success",
+    });
 };
 
