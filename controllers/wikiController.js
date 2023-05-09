@@ -1,6 +1,10 @@
 const Wiki_history = require("../models/wikiModel.js");
 const fs = require("fs");
 
+//TODO: POST 요청에 사용자가 로그인 했는지 확인
+//TODO: 문서 수정시 사용자에게 보상 지급
+//TODO: 현재는 editor_id 받고 있는데, 백엔드에서 editor_id를 받아오는 방식 도입
+
 // 전체 글 불러오기 + 수정 시 기존 전체 텍스트 불러오기
 exports.contentsGetMid = async (req, res) => {
     const rows = await Wiki_history.readRecent();
@@ -311,7 +315,7 @@ exports.contentsSectionPostMid = async (req, res) => {
 
     // point 주는 api 요청
 
-    res.status(202).send({
+    res.status(200).send({
         message: "Section is updated successfully",
     });
 };
@@ -319,7 +323,7 @@ exports.contentsSectionPostMid = async (req, res) => {
 // 수정 내역 불러오기
 exports.historyGetMid = async (req, res) => {
     const rows = await Wiki_history.read();
-    res.send(rows);
+    res.status(200).send(rows);
 };
 
 // 각 수정 내역의 raw 파일 불러오기
@@ -341,7 +345,7 @@ exports.historyVersionGetMid = async (req, res) => {
 
         jsonData['version'] = req.params.version;
         jsonData['text'] = text;
-        res.send(jsonData);
+        res.status(200).send(jsonData);
     });
 };
 
@@ -355,17 +359,16 @@ exports.historyVersionPostMid = async (req, res) => {
     const updatedFileName = `./documents/r${latestVersion + 1}.wiki`;
     const originalFileName = `./documents/r${rollbackVersion}.wiki`;
 
-    fs.copyFile(originalFileName, updatedFileName, (err) => {
-        if (err) {
-            // 파일 쓰다가 에러난 경우
-            res.status(432).send({
-                message: "Something went wrong while writing file",
-                newContent: req.body.newContent
-            });
-            return;
-        }
+    try {
+        fs.copyFileSync(originalFileName, updatedFileName);
         console.log('rollback success!');
-    });
+    } catch (err) {
+        // 파일 쓰다가 에러난 경우
+        res.status(432).send({
+            message: "Something went wrong while doing rollback",
+        });
+        return;
+    }
 
     // 새로운 히스토리 생성
     const newWiki_history = new Wiki_history({
@@ -381,5 +384,56 @@ exports.historyVersionPostMid = async (req, res) => {
     res.status(200).send({
         message: "Rollback is success",
     });
+};
+
+// 두 버전 비교하기
+exports.comparisonGetMid = async (req, res) => {
+    let rev = req.params.rev;
+    let oldrev = req.params.oldrev;
+    let jsonData = {};
+
+    try {
+        // 해당 버전의 파일 읽어서 jsonData에 저장
+        const data = fs.readFileSync(`./documents/${rev}.wiki`, 'utf8');
+        const lines = data.split(/\r?\n/);
+        const text = lines.join('\n');
+
+        jsonData['rev'] = rev;
+        jsonData['rev_text'] = text;
+    } catch (err) {
+        // 없는 파일 요청 시 에러 처리
+        res.status(404).send({
+            message: "File not found"
+        });
+        return;
+    }
+
+    try {
+        // 해당 버전의 파일 읽어서 jsonData에 저장
+        const data = fs.readFileSync(`./documents/${oldrev}.wiki`, 'utf8');
+        const lines = data.split(/\r?\n/);
+        const text = lines.join('\n');
+
+        jsonData['oldrev'] = oldrev;
+        jsonData['oldrev_text'] = text;
+    } catch (err) {
+        // 없는 파일 요청 시 에러 처리
+        res.status(404).send({
+            message: "File not found"
+        });
+        return;
+    }
+
+    oldrev = parseInt(oldrev.substring(1));
+    rev = parseInt(rev.substring(1));
+
+    if (oldrev >= rev) {
+        res.status(432).send({
+            message: "oldrev should be smaller than rev"
+        });
+        return;
+    }
+
+    res.status(200).send(jsonData);
 };
 

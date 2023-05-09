@@ -16,12 +16,15 @@ router.get('/contents/:section', wikiMid.contentsSectionGetMid);
 router.post('/contents/:section', wikiMid.contentsSectionPostMid);
 
 // 위키 전체 히스토리 불러오기
-router.get('/history', wikiMid.historyGetMid);
+router.get('/historys', wikiMid.historyGetMid);
 
 // 특정 버전의 위키 raw data 불러오기
-router.get('/history/:version', wikiMid.historyVersionGetMid);
+router.get('/historys/:version', wikiMid.historyVersionGetMid);
 
 // 특정 버전으로 롤백하기
-router.post('/history/:version', wikiMid.historyVersionPostMid);
+router.post('/historys/:version', wikiMid.historyVersionPostMid);
+
+// 두 버전 비교하기
+router.get('/comparison/:rev/:oldrev', wikiMid.comparisonGetMid);
 
 module.exports = router;
