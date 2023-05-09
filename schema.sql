@@ -59,6 +59,7 @@ CREATE TABLE betting_history (
     FOREIGN KEY (betting_user) REFERENCES users(user_id)
 );
 
+/* 먼저 데이터값 넣어둬야함 */
 CREATE TABLE point_reason(
     reason_id INT PRIMARY KEY AUTO_INCREMENT,
     point_reason TEXT,
