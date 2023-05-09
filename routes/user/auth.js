@@ -16,4 +16,9 @@ router.post("/signin", isNotSignedIn, signIn);
 
 router.get("/signout", isSignedIn, signOut);
 
+router.get("/issignedin", isSignedIn, (req, res) => {
+  return res
+    .status(201)
+    .json({ success: true, message: "로그인한 상태입니다." });
+});
 module.exports = router;
