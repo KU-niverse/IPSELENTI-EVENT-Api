@@ -1,5 +1,6 @@
 const User = require("../../models/userModel.js");
 //유저가 로그인 되었을때만 접근 가능
+//유저 정보 불러오기
 exports.info = (req, res, err) => {
   try {
     return res.status(200).json({ success: true, user: req.user[0] });
@@ -18,12 +19,28 @@ exports.info = (req, res, err) => {
       return;
     }); */
 };
-exports.wikiHistorys = async (req, res, err) => {
+
+//get user wiki history
+exports.wikiHistory = async (req, res, err) => {
   try {
-    const userHistory = await User.wikiHistorys(req.user[0].user_id);
+    const userHistory = await User.wikiHistory(req.user[0].user_id);
     return res.status(200).json({
       success: true,
-      wikiHistory: userHistory,
+      wikiHistory: userHistory || [],
+    });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
+//get user betting history
+exports.bettingHistory = async (req, res, err) => {
+  try {
+    const userHistory = await User.bettingHistory(req.user[0].user_id);
+    return res.status(200).json({
+      success: true,
+      bettingHistory: userHistory || [],
     });
   } catch (error) {
     console.error(error);

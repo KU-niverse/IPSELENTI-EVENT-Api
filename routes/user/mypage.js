@@ -4,11 +4,13 @@ const passport = require("passport");
 const { isSignedIn, isNotSignedIn } = require("../../middlewares/sign_in");
 const {
   info,
-  wikiHistorys,
+  wikiHistory,
+  bettingHistory,
 } = require("../../controllers/userController/myPage");
 
 const router = express.Router();
-router.get("/wikihistorys", isSignedIn, wikiHistorys);
+router.get("/wikihistory", isSignedIn, wikiHistory);
 router.get("/info", isSignedIn, info);
 
+router.get("/bettinghistory", isSignedIn, bettingHistory);
 module.exports = router;

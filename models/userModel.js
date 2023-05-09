@@ -25,12 +25,20 @@ User.create = async (newUser) => {
   return rows;
 };
 
-User.wikiHistorys = async (user_id) => {
+User.wikiHistory = async (user_id) => {
   const [rows] = await pool.query(
     "SELECT * FROM wiki_history WHERE editor_id = ?",
     [user_id]
   );
 
+  return rows;
+};
+
+User.bettingHistory = async (user_id) => {
+  const [rows] = await pool.query(
+    "SELECT * FROM betting_history WHERE betting_user = ?",
+    [user_id]
+  );
   return rows;
 };
 
