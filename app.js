@@ -21,8 +21,13 @@ const app = express();
 passportConfig();
 
 app.use(morgan("dev"));
+const corsOptions = {
+  origin: "http://localhost:3000", // 클라이언트 앱의 URL을 입력하세요.
+  credentials: true,
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookiParser(process.env.COOKIE_SECRET));
@@ -34,6 +39,7 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: false,
+      sameSite: "lax",
     },
   })
 );
@@ -46,7 +52,7 @@ app.use("/user", userRoutes);
 app.use("/wiki", wikiRoutes);
 app.use("/event", eventRoutes);*/
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
