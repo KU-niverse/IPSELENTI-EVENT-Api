@@ -1,4 +1,4 @@
-const Request = require('../models/eventModel.js');
+const {Request, Betting, Celebrity} = require('../models/eventModel.js');
 
 // 가수 등록 요청하기
 exports.requestPostMid = async (req, res) => {
@@ -37,7 +37,8 @@ exports.requestGetByIdMid = async (req, res) => {
 //내가 베팅한 가수 조회
 exports.bettingGetMid = async (req, res) => {
     try {
-
+        const bettings = await Betting.getBetting(req.params.betting_user);
+        res.send(bettings);
     } catch (error) {
         console.error(error);
         res.status(400).send();
@@ -45,9 +46,10 @@ exports.bettingGetMid = async (req, res) => {
 }
 
 //모든 가수 정보 및 배당률 조회
-exports.bettingGetAllMid = async (req, res) => {
+exports.celebsGetAllMid = async (req, res) => {
     try {
-
+        const celebrities = await Celebrity.getCelebsAll();
+        res.send(celebrities);
     } catch (error) {
         console.error(error);
         res.status(400).send();

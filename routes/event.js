@@ -10,9 +10,9 @@ router.post('/celebrity_request', eventMid.requestPostMid);
 router.get('/celebrity_request', eventMid.requestGetByIdMid);
 
 // GET /event/events
-router.get('/events');
+router.get('/events', eventMid.celebsGetAllMid);
 
 // GET /event/user/:userid
-router.get('/user/:userid');
+router.get('/user/:userid', eventMid.bettingGetMid);
 
 module.exports = router;
