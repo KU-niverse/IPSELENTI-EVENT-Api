@@ -4,7 +4,8 @@ const User = require("../../models/userModel.js");
 
 //회원가입
 exports.signUp = async (req, res, next) => {
-  const { user_id, name, password, phone_number, recommender_id } = req.body;
+  const { user_id, user_name, password, phone_number, recommender_id } =
+    req.body;
   try {
     const exUser = await User.find_user(user_id);
     const exRecommender = await User.find_user(recommender_id);
