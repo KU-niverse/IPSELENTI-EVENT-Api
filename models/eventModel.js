@@ -45,6 +45,7 @@ Betting.getBetting = async (id) => {
 const Celebrity = function(request) {
     this.celebrity_id = request.celebrity_id;
     this.celebrity_name = request.celebrity_name;
+    this.celebrity_image = request.celebrity_image;
     this.betting_amount - request.betting_amount;
 }
 
