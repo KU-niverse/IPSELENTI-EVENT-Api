@@ -12,10 +12,10 @@ router.delete('/', commentMid.commentDeleteMid);
 // POST /comment/like
 router.post('/like', commentMid.commentLikePostMid);
 
-// GET /comment/by_time
-router.get('/by_time', commentMid.commentByTimeGetMid);
+// GET /comment/bytime
+router.get('/bytime', commentMid.commentByTimeGetMid);
 
-// GET /comment/by_like 
-router.get('/by_like', commentMid.commentByLikeGetMid);
+// GET /comment/bylike 
+router.get('/bylike', commentMid.commentByLikeGetMid);
 
 module.exports = router;

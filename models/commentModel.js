@@ -35,17 +35,19 @@ Comment.deleteComment = async (id) => {
 
 // comment의 좋아요를 증가시키는 함수
 Comment.likeComment = async (comment, liker) => {
-    await pool.query(`SELECT * FROM comments_like WHERE comment_id=? AND liker_id=?`, [comment, liker], function(err, flag) {
-        const numRows = flag.length;
-        if (!numRows) {
-            const result = 0 // 중복된 좋아요
-            return result;
-        } else {
-            const result_1 = pool.query(`INSERT INTO comments_like(comment_id, liker_id) VALUES (?, ?)`, [comment, liker]);
-            const result_2 = pool.query(`UPDATE comments SET likes_count = likes_count + 1 WHERE comment_id=?`, [comment]);
-            return result_1 + result_2
-        }
-    });
+    const [flag] = await pool.query(`SELECT * FROM comments_like WHERE comment_id=? AND liker_id=?`, [comment, liker]);
+    if (![flag]) {
+        return;
+    } else {
+        const [result] = await pool.query(`UPDATE comments SET likes_count = likes_count + 1 WHERE comment_id=?`, [comment], (err, res) => {
+            if(err) {
+                console.log("error: ", err);
+                return;
+            }
+            console.log("update likes with id: ", comment);
+        });
+    return result;
+    }
 };
 
 // 댓글을 최신순으로 정렬하여 반환하는 함수 22
