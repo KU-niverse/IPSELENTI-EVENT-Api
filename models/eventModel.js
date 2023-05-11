@@ -55,4 +55,10 @@ Celebrity.getCelebsAll = async() => {
     return rows;
 }
 
+// 전체 테이블 betting_amount 총합 반환하는 함수
+Celebrity.getBettingAmountSum = async() => {
+    const betting_amount_sum = await pool.query(`SELECT SUM(betting_amount) AS total_betting_amount FROM celebrities`);
+    return betting_amount_sum[0][0];
+}
+
 module.exports = {Request, Betting, Celebrity,};

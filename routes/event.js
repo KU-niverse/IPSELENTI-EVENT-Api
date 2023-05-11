@@ -9,8 +9,8 @@ router.post('/celebrityrequest', eventMid.requestPostMid);
 // GET /event/celebrityrequest
 router.get('/celebrityrequest', eventMid.requestGetByIdMid);
 
-// GET /event/events
-router.get('/events', eventMid.celebsGetAllMid);
+// GET /event/celebrities
+router.get('/celebrities', eventMid.celebsGetAllMid);
 
 // GET /event/user/:userid
 router.get('/user/:userid', eventMid.bettingGetMid);
