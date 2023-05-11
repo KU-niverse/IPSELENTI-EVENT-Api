@@ -3,7 +3,7 @@ exports.isSignedIn = (req, res, next) => {
     next();
   } else {
     console.log("로그인이 필요합니다.");
-    res.status(403).send({ success: false, message: "로그인이 필요합니다." });
+    res.status(401).send({ success: false, message: "로그인이 필요합니다." });
   }
 };
 

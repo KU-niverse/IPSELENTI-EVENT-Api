@@ -25,7 +25,7 @@ exports.signUp = async (req, res, next) => {
 
       await User.create({
         user_id,
-        name,
+        name: user_name,
         password: hash,
         phone_number,
         recommender_id: recommender_id || null,
@@ -49,7 +49,6 @@ exports.signUp = async (req, res, next) => {
   "password": "young1214!",
   "phone_number": "01053783514",
   "recommender_id": "2016333333"
-
 }
 */
 
@@ -61,7 +60,7 @@ exports.signIn = async (req, res, next) => {
       return next(authError);
     }
     if (!user) {
-      return res.status(201).json({ success: false, message: info.message });
+      return res.status(401).json({ success: false, message: info.message });
     }
 
     return req.login(user, (loginError) => {
@@ -69,6 +68,7 @@ exports.signIn = async (req, res, next) => {
         console.error(loginError);
         return next(loginError);
       }
+      console.log("로그인 성공");
       return res
         .status(201)
         .json({ success: true, message: "로그인에 성공하였습니다!" });
@@ -77,7 +77,13 @@ exports.signIn = async (req, res, next) => {
 };
 
 exports.signOut = (req, res) => {
-  req.logout(() => {
-    res.status(200).send({ success: true, message: "로그아웃 되었습니다." });
-  });
+  try {
+    req.logout(() => {
+      console.log("로그아웃 되었습니다.");
+      res.status(200).send({ success: true, message: "로그아웃 되었습니다." });
+    });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
 };
