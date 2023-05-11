@@ -26,8 +26,8 @@ CREATE TABLE comments_like (
     comment_id INT,
     liker_id VARCHAR(10),
     PRIMARY KEY (comment_id, liker_id),
-    FOREIGN KEY (comment_id) REFERENCES comments(comment_id),
-    FOREIGN KEY (liker_id) REFERENCES users(user_id)
+    FOREIGN KEY (comment_id) REFERENCES comments(comment_id) ON DELETE CASCADE,
+    FOREIGN KEY (liker_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE wiki_history (
@@ -39,8 +39,6 @@ CREATE TABLE wiki_history (
     content_summary VARCHAR(255), /* 추가된 column */
     FOREIGN KEY (editor_id) REFERENCES users(user_id)
 );
-
-
 
 CREATE TABLE celebrities (
     celebrity_id INT PRIMARY KEY AUTO_INCREMENT,

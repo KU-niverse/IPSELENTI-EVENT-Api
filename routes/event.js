@@ -3,10 +3,10 @@ const eventMid = require('../controllers/eventController');
 
 const router = express.Router();
 
-// POST /event/celebrity_request
+// POST /event/celebrityrequest
 router.post('/celebrityrequest', eventMid.requestPostMid);
 
-// GET /event/celebrity_request
+// GET /event/celebrityrequest
 router.get('/celebrityrequest', eventMid.requestGetByIdMid);
 
 // GET /event/events
