@@ -6,7 +6,7 @@ exports.requestPostMid = async (req, res) => {
         // 빈 내용 요청 시 에러 처리
         if (!req.body){
             res.status(400).send({
-                message: "Content can't be empty."
+                message: "내용을 작성해주세요."
             });
         } else {
             const newRequest = new Request({
@@ -15,11 +15,11 @@ exports.requestPostMid = async (req, res) => {
                 request_reason: req.body.request_reason,
             })
             const id = await Request.createRequest(newRequest);
-            res.status(200).send("생성 성공");
+            res.status(200).send({message: "요청을 완료했습니다."});
         }
     } catch (error) {
         console.error(error);
-        res.status(400).send();
+        res.status(404).send({message: "오류가 발생했습니다."});
     }
 }
 
@@ -27,10 +27,10 @@ exports.requestPostMid = async (req, res) => {
 exports.requestGetByIdMid = async (req, res) => {
     try {
         const requests = await Request.getRequestFromId(req.body.requester_id);
-        res.send(requests);
+        res.status(200).send(requests);
     } catch (error) {
         console.error(error);
-        res.status(400).send();
+        res.status(400).send({message: "오류가 발생했습니다."});
     }
 }
 
@@ -38,10 +38,10 @@ exports.requestGetByIdMid = async (req, res) => {
 exports.bettingGetMid = async (req, res) => {
     try {
         const bettings = await Betting.getBetting(req.params.betting_user);
-        res.send(bettings);
+        res.status(200).send(bettings);
     } catch (error) {
         console.error(error);
-        res.status(400).send();
+        res.status(400).send({message: "오류가 발생했습니다."});
     }   
 }
 
@@ -49,9 +49,9 @@ exports.bettingGetMid = async (req, res) => {
 exports.celebsGetAllMid = async (req, res) => {
     try {
         const celebrities = await Celebrity.getCelebsAll();
-        res.send(celebrities);
+        res.status(200).send(celebrities);
     } catch (error) {
         console.error(error);
-        res.status(400).send();
+        res.status(400).send({message: "오류가 발생했습니다."});
     }   
 }

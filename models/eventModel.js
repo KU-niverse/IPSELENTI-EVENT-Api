@@ -32,7 +32,7 @@ const Betting = function(request) {
     this.betting_id = request.betting_id;
     this.celebrity_id = request.celebrity_id;
     this.betting_user = request.betting_user;
-    this.betting_point = request.betting_time;
+    this.betting_time = request.betting_time;
 }
 
 // user id 넣어주면 해당 id의 베팅 내역 반환해주는 함수

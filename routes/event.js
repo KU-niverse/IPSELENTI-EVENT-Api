@@ -4,10 +4,10 @@ const eventMid = require('../controllers/eventController');
 const router = express.Router();
 
 // POST /event/celebrity_request
-router.post('/celebrity_request', eventMid.requestPostMid);
+router.post('/celebrityrequest', eventMid.requestPostMid);
 
 // GET /event/celebrity_request
-router.get('/celebrity_request', eventMid.requestGetByIdMid);
+router.get('/celebrityrequest', eventMid.requestGetByIdMid);
 
 // GET /event/events
 router.get('/events', eventMid.celebsGetAllMid);
