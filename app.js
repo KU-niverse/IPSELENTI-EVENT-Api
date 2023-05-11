@@ -47,6 +47,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 app.use("/user", userRoutes);
 /* app.use("/comment", commentRoutes);
 app.use("/wiki", wikiRoutes);
