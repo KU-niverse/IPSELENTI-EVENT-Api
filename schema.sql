@@ -26,8 +26,8 @@ CREATE TABLE comments_like (
     comment_id INT,
     liker_id VARCHAR(10),
     PRIMARY KEY (comment_id, liker_id),
-    FOREIGN KEY (comment_id) REFERENCES comments(comment_id),
-    FOREIGN KEY (liker_id) REFERENCES users(user_id)
+    FOREIGN KEY (comment_id) REFERENCES comments(comment_id) ON DELETE CASCADE,
+    FOREIGN KEY (liker_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE wiki_history (
@@ -35,12 +35,15 @@ CREATE TABLE wiki_history (
     editor_id VARCHAR(10) NOT NULL,
     text_pointer text,
     edited_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_rollback INT DEFAULT 0, 
+    content_summary VARCHAR(255), /* 추가된 column */
     FOREIGN KEY (editor_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE celebrities (
     celebrity_id INT PRIMARY KEY AUTO_INCREMENT,
     celebrities_name VARCHAR(15) NOT NULL,
+    celebrity_image LONGBLOB, NOT NULL, /* 추가된 column */
     betting_amount INT DEFAULT 0
 );
 
@@ -54,6 +57,7 @@ CREATE TABLE betting_history (
     FOREIGN KEY (betting_user) REFERENCES users(user_id)
 );
 
+/* 먼저 데이터값 넣어둬야함 */
 CREATE TABLE point_reason(
     reason_id INT PRIMARY KEY AUTO_INCREMENT,
     point_reason TEXT,
