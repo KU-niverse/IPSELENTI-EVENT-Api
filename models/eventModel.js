@@ -68,6 +68,13 @@ const BHistory = function(request) {
     this.betting_point = request.betting_point;
 }
 
+// user_id, celebrity_id를 받으면 해당하는 베팅 내역 반환해주는 함수
+BHistory.getBettingFromId = async(user_id, celebrity_id) => {
+    const result = await pool.query(`SELECT * FROM betting_history WHERE celebrity_id = ? AND betting_user = ?`, [celebrity_id, user_id]);
+    const user_point = await pool.query(`SELECT point FROM users WHERE user_id = ?`, [user_id]);
+    return [result[0], user_point];
+}
+
 // 베팅하기 함수
 BHistory.putBetting = async(newBHistory) => {
     const [result] = await pool.query(`INSERT INTO betting_history SET ?`, newBHistory);

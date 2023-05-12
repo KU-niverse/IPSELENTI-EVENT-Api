@@ -58,6 +58,21 @@ exports.celebsGetAllMid = async (req, res) => {
     }   
 }
 
+// 특정 가수에 대한 유저의 베팅 정보 + 총 베팅 포인트 금액 + 내 남은 포인트 금액 조회
+exports.BettingHistoryGetMid = async (req, res) => {
+    try {
+        const result = await BHistory.getBettingFromId(req.params.userid, req.params.artistid);
+        const bhistory = result[0];
+        const user_point = result[1];
+        const betting_amount_sum = await Celebrity.getBettingAmountSum();
+        const total_result = {"history": bhistory, "betting_amount_sum": betting_amount_sum.total_betting_amount, "user_point": user_point[0][0].point}
+        res.status(200).send(total_result);
+    } catch (error) {
+        console.error(error);
+        res.status(404).send({message: "오류가 발생했습니다."});
+    }
+}
+
 // 해당 가수에 베팅하기
 exports.BettingPointPutMid = async (req, res) => {
     try {

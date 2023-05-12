@@ -13,7 +13,7 @@ router.get('/celebrityrequest', eventMid.requestGetByIdMid);
 router.get('/celebrities', eventMid.celebsGetAllMid);
 
 // GET /event/user/:userid/artist/:artistid
-//router.get('/user/:userid/artist/:artistid', eventMid.BettingHistoryGetMid);
+router.get('/user/:userid/artist/:artistid', eventMid.BettingHistoryGetMid);
 
 // PUT /event/user/:userid/artist/:artistid
 router.put('/user/:userid/artist/:artistid', eventMid.BettingPointPutMid);
