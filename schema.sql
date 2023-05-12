@@ -26,8 +26,8 @@ CREATE TABLE comments_like (
     comment_id INT,
     liker_id VARCHAR(10),
     PRIMARY KEY (comment_id, liker_id),
-    FOREIGN KEY (comment_id) REFERENCES comments(comment_id),
-    FOREIGN KEY (liker_id) REFERENCES users(user_id)
+    FOREIGN KEY (comment_id) REFERENCES comments(comment_id) ON DELETE CASCADE,
+    FOREIGN KEY (liker_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE wiki_history (
@@ -59,6 +59,7 @@ CREATE TABLE betting_history (
     FOREIGN KEY (betting_user) REFERENCES users(user_id)
 );
 
+/* 먼저 데이터값 넣어둬야함 */
 CREATE TABLE point_reason(
     reason_id INT PRIMARY KEY AUTO_INCREMENT,
     point_reason TEXT,
