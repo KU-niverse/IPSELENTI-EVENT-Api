@@ -3,7 +3,6 @@ const Comment = require('../models/commentModel.js');
 // 댓글 작성하기
 exports.commentPostMid = async (req, res) => {
     try {
-        // 빈 내용 요청 시 에러 처리
         if (!req.body) {
             res.status(400).send({
                 message: "내용을 작성해주세요."
