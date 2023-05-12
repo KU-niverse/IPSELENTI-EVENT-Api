@@ -16,7 +16,7 @@ async function getRequest (id) {
 
 // 새로운 request를 생성해주는 함수
 Request.createRequest = async (newRequest) => {
-    const [result] = await pool.query("INSERT INTO celebrity_request SET ?", newRequest);
+    const [result] = await pool.query(`INSERT INTO celebrity_request SET ?`, newRequest);
     const id = result.insertId;
     return getRequest(id);
 }
@@ -29,13 +29,12 @@ Request.getRequestFromId = async (requester_id) => {
 
 // betting_history 테이블의 column을 가지는 객체
 const Betting = function(request) {
-    this.betting_id = request.betting_id;
     this.celebrity_id = request.celebrity_id;
     this.betting_user = request.betting_user;
     this.betting_time = request.betting_time;
 }
 
-// user id 넣어주면 해당 id의 베팅 내역 반환해주는 함수
+// user id 넣어주면 해당 id의 전체 베팅 내역 반환해주는 함수
 Betting.getBetting = async (id) => {
     const [rows] = await pool.query(`SELECT * FROM betting_history WHERE betting_user = ?`, [id]);
     return rows;
@@ -61,4 +60,21 @@ Celebrity.getBettingAmountSum = async() => {
     return betting_amount_sum[0][0];
 }
 
-module.exports = {Request, Betting, Celebrity,};
+// betting_history 테이블의 column을 가지는 객체
+const BHistory = function(request) {
+    this.betting_id = request.betting_id;
+    this.celebrity_id = request.celebrity_id;
+    this.betting_user = request.betting_user;
+    this.betting_point = request.betting_point;
+}
+
+// 베팅하기 함수
+BHistory.putBetting = async(newBHistory) => {
+    const [result] = await pool.query(`INSERT INTO betting_history SET ?`, newBHistory);
+    const userupdate = await pool.query(`UPDATE users SET point = point - ? WHERE user_id = ?`, [newBHistory.betting_point, newBHistory.betting_user]);
+    const celebupdate = await pool.query(`UPDATE celebrities SET betting_amount = betting_amount + ? WHERE celebrity_id = ?`, [newBHistory.betting_point, newBHistory.celebrity_id]);
+    return result, userupdate, celebupdate;
+}
+
+
+module.exports = {Request, Betting, Celebrity, BHistory};

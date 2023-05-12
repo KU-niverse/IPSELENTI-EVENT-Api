@@ -1,4 +1,4 @@
-const {Request, Betting, Celebrity} = require('../models/eventModel.js');
+const {Request, Betting, Celebrity, BHistory} = require('../models/eventModel.js');
 
 // 가수 등록 요청하기
 exports.requestPostMid = async (req, res) => {
@@ -30,22 +30,22 @@ exports.requestGetByIdMid = async (req, res) => {
         res.status(200).send(requests);
     } catch (error) {
         console.error(error);
-        res.status(400).send({message: "오류가 발생했습니다."});
+        res.status(404).send({message: "오류가 발생했습니다."});
     }
 }
 
-//내가 베팅한 가수 조회
+// 내가 베팅한 가수 조회
 exports.bettingGetMid = async (req, res) => {
     try {
         const bettings = await Betting.getBetting(req.params.userid);
         res.status(200).send(bettings);
     } catch (error) {
         console.error(error);
-        res.status(400).send({message: "오류가 발생했습니다."});
+        res.status(404).send({message: "오류가 발생했습니다."});
     }
 }
 
-//모든 가수 정보 및 총 베팅 금액 조회
+// 모든 가수 정보 및 총 베팅 금액 조회
 exports.celebsGetAllMid = async (req, res) => {
     try {
         const celebrities = await Celebrity.getCelebsAll();
@@ -54,6 +54,31 @@ exports.celebsGetAllMid = async (req, res) => {
         res.status(200).send(result);
     } catch (error) {
         console.error(error);
-        res.status(400).send({message: "오류가 발생했습니다."});
+        res.status(404).send({message: "오류가 발생했습니다."});
     }   
+}
+
+// 해당 가수에 베팅하기
+exports.BettingPointPutMid = async (req, res) => {
+    try {
+        if (req.body) {
+            const newBhistroy = new BHistory({
+                celebrity_id: req.params.artistid,
+                betting_user: req.params.userid,
+                betting_point: req.body.betting_point,
+            })
+            const [result] = await BHistory.putBetting(newBhistroy);
+            if (result.affectedRows != 0) {
+                res.status(200).send({message: "베팅을 완료했습니다."});
+            }
+            else {
+                res.status(403).send({message: "베팅에 실패했습니다."});
+            }
+        } else {
+            res.status(400).send({message: "베팅할 포인트를 입력해주세요."});
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(404).send({message: "오류가 발생했습니다."});
+    }
 }

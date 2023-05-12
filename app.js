@@ -13,11 +13,11 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/user", userRoutes);
-app.use("/comment", commentRoutes);
-app.use("/wiki", wikiRoutes);
+//app.use("/user", userRoutes);
+//app.use("/comment", commentRoutes);
+//app.use("/wiki", wikiRoutes);
 app.use("/event", eventRoutes);
-app.use("/mypage", mypageRoutes);
+//app.use("/mypage", mypageRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
