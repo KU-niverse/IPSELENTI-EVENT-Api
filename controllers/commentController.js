@@ -24,7 +24,7 @@ exports.commentPostMid = async (req, res) => {
 // 댓글 삭제하기
 exports.commentDeleteMid = async (req, res) => {
     try {
-        await Comment.deleteComment(req.params.comment_id);
+        await Comment.deleteComment(req.body.comment_id);
         res.status(200).send({message: "댓글을 삭제했습니다."});
     } catch (error) {
         console.error(error);
@@ -35,7 +35,7 @@ exports.commentDeleteMid = async (req, res) => {
 // 좋아요
 exports.commentLikePostMid = async (req, res) => {
     try {
-        await Comment.likeComment(req.params.comment_id, req.params.liker_id);
+        await Comment.likeComment(req.body.comment_id, req.body.liker_id);
         res.status(200).send({message: "좋아요를 등록했습니다."});
     } catch (error) {
         console.error(error);
