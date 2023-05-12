@@ -40,6 +40,8 @@ CREATE TABLE wiki_history (
     FOREIGN KEY (editor_id) REFERENCES users(user_id)
 );
 
+
+
 CREATE TABLE celebrities (
     celebrity_id INT PRIMARY KEY AUTO_INCREMENT,
     celebrities_name VARCHAR(15) NOT NULL,
@@ -82,3 +84,4 @@ CREATE TABLE celebrity_request(
     request_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (requester_id) REFERENCES users(user_id)
 );
+
