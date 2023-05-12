@@ -1,5 +1,4 @@
 const pool = require("../config/db.js");
-const { commentLikePostMid } = require("../controllers/commentController.js");
 
 
 // comments 테이블의 column을 가지는 객체
