@@ -9,12 +9,14 @@ const pool = mysql.createPool({
   database: process.env.MYSQL_DATABASE,
 });
 
+
 module.exports = pool;
 
 /* exports.getUsers = async () => {
   const [rows] = await pool.query("SELECT * FROM users");
   return rows;
 }; */
+
 /* 예시코드 */
 
 /* export async function getNotes() {
