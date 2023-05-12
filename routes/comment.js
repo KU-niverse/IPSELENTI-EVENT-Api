@@ -15,7 +15,5 @@ router.post('/like', commentMid.commentLikePostMid);
 // GET /comment/bytime
 router.get('/bytime', commentMid.commentByTimeGetMid);
 
-// GET /comment/bylike
+// GET /comment/bylike 
 router.get('/bylike', commentMid.commentByLikeGetMid);
-
-module.exports = router;
