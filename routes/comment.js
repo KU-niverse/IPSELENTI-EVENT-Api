@@ -17,3 +17,5 @@ router.get('/bytime', commentMid.commentByTimeGetMid);
 
 // GET /comment/bylike 
 router.get('/bylike', commentMid.commentByLikeGetMid);
+
+module.exports = router;
