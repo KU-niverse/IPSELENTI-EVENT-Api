@@ -14,11 +14,17 @@ class Point {
 }
 
 //포인트 획득
-Point.getPoint = async (user_id) => {
+Point.getPoint = async (user_id, reason, point) => {
   //히스토리 반영필요
+  const addPointHistory = await pool.query(
+    `INSERT INTO point_history (user_id, reason_id, point_amount) VALUES (?, ?, ?)`,
+    [user_id, reason, point]
+  );
+
+  //포인트 획득
   const userUpdate = await pool.query(
     `UPDATE users SET point = point + ? WHERE user_id = ?`,
-    [10000, user_id]
+    [point, user_id]
   );
   return userUpdate;
 };
