@@ -14,7 +14,7 @@ const commentRoutes = require("./routes/comment");
 const wikiRoutes = require("./routes/wiki");
 const eventRoutes = require("./routes/event");
 const mypageRoutes = require("./routes/user/myPage");
-
+const pointRoutes = require("./routes/user/point");
 dotenv.config();
 const app = express();
 
@@ -46,7 +46,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 app.use("/user", userRoutes);
 app.use("/comment", commentRoutes);

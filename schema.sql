@@ -66,6 +66,8 @@ CREATE TABLE point_reason(
     amount INT
 );
 
+INSERT INTO point_reason (point_reason, amount) VALUES ('회원가입', 10000),('추천인(기존)', 30000), ('추천인(신규)', 20000) , ('위키 수정', 10000), ('출석', 10000), ('위키 접근', 5000), ('베팅', null), ('베팅철회', null);
+
 CREATE TABLE point_history(
     point_history_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id VARCHAR(10) NOT NULL,
