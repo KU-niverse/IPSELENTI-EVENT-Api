@@ -10,7 +10,7 @@ exports.commentPostMid = async (req, res) => {
             });
         }
         const newComment = new Comment({
-            author: req.body.author,
+            author: req.user[0].user_id,
             comment_content: req.body.comment_content,
         })
         const id = await Comment.createComment(newComment);
@@ -22,7 +22,7 @@ exports.commentPostMid = async (req, res) => {
 }
 
 // 댓글 삭제하기
-exports.commentDeleteMid = async (req, res) => {
+/*exports.commentDeleteMid = async (req, res) => {
     try {
         await Comment.deleteComment(req.body.comment_id);
         res.status(200).send({message: "댓글을 삭제했습니다."});
@@ -30,12 +30,12 @@ exports.commentDeleteMid = async (req, res) => {
         console.error(error);
         res.status(404).send({message: "오류가 발생했습니다."});
     }
-}
+}*/
 
 // 좋아요
 exports.commentLikePostMid = async (req, res) => {
     try {
-        result = await Comment.likeComment(req.body.comment_id, req.body.liker_id);
+        result = await Comment.likeComment(req.body.comment_id, req.user[0].user_id);
         if (result == -1) {
             res.status(400).send({message: "이미 좋아요를 눌렀습니다."});
         } else if (result == 0) {
