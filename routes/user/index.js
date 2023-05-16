@@ -3,7 +3,7 @@ const express = require("express");
 const { isLoggedIn, isNotLoggedIn } = require("../../middlewares/sign_in");
 
 const auth = require("./auth");
-const mypage = require("./myPage");
+const mypage = require("./mypage");
 const admin = require("./admin");
 const router = express.Router();
 
