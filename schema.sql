@@ -60,12 +60,12 @@ CREATE TABLE betting_history (
 );
 
 /* 먼저 데이터값 넣어둬야함 */
-CREATE TABLE point_reason(
+/* CREATE TABLE point_reason(
     reason_id INT PRIMARY KEY AUTO_INCREMENT,
     point_reason TEXT,
     amount INT
 );
-
+ */
 CREATE TABLE point_history(
     point_history_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id VARCHAR(10) NOT NULL,
