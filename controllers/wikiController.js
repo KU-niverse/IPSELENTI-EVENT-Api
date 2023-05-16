@@ -127,6 +127,7 @@ exports.contentsPostMid = async (req, res) => {
     const updatedFileName = `./documents/r${latestVersion + 1}.wiki`;
     const newContent = req.body.newContent;
 
+    console.log("hihihihiidsaf");
 
     fs.writeFile(updatedFileName, newContent, (err) => {
         // 파일 쓰다가 에러난 경우
@@ -143,7 +144,7 @@ exports.contentsPostMid = async (req, res) => {
 
     // 새로운 히스토리 생성
     const newWiki_history = new Wiki_history({
-        editor_id: req.body.editor_id,
+        editor_id: req.user[0].user_id,
         text_pointer: `r${latestVersion + 1}`,
         is_rollback: 0,
         //content_summary: req.body.content_summary
@@ -210,7 +211,7 @@ exports.contentsSectionGetMid = async (req, res) => {
         // 섹션 번호에 맞는 섹션 불러오기, 유효하지 않은 번호일 경우 에러 처리
         try {
             section = sections[parseInt(req.params.section) - 1];
-            console.log(sections)
+            //console.log(sections)
             jsonData = {};
             jsonData['version'] = rows[0].text_pointer;
             jsonData['title'] = section.title;
@@ -296,7 +297,7 @@ exports.contentsSectionPostMid = async (req, res) => {
 
         // 새로운 히스토리 생성
         const newWiki_history = new Wiki_history({
-            editor_id: req.body.editor_id,
+            editor_id: req.user[0].user_id,
             text_pointer: `r${latestVersion + 1}`,
             is_rollback: 0,
             //content_summary: req.body.content_summary
@@ -372,7 +373,7 @@ exports.historyVersionPostMid = async (req, res) => {
 
     // 새로운 히스토리 생성
     const newWiki_history = new Wiki_history({
-        editor_id: req.body.editor_id,
+        editor_id: req.user[0].user_id,
         text_pointer: `r${latestVersion + 1}`,
         is_rollback: rollbackVersion,
         //content_summary: req.body.content_summary

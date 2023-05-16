@@ -33,9 +33,10 @@ Comment.deleteComment = async (id) => {
 
 // comment의 좋아요를 증가시키는 함수
 Comment.likeComment = async (comment, liker) => {
-    const [flag] = await pool.query(`SELECT * FROM comments_like WHERE comment_id=? AND liker_id=?`, [comment, liker]);
-    if (![flag]) {
-        return;
+    const flag = await pool.query(`SELECT * FROM comments_like WHERE comment_id=? AND liker_id=?`, [comment, liker]);
+    console.log(flag[0].length);
+    if (flag[0].length) {
+        return -1;
     } else {
         const result_a = await pool.query(`INSERT INTO comments_like (comment_id, liker_id) VALUES (?, ?)`, [comment, liker]);
         const result_b = await pool.query(`UPDATE comments SET likes_count = likes_count + 1 WHERE comment_id=?`, [comment]);

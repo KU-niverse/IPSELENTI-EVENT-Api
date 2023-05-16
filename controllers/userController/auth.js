@@ -42,7 +42,12 @@ exports.signUp = async (req, res, next) => {
       }
       return res
         .status(201)
-        .json({ success: true, message: "회원 가입이 완료되었습니다." });
+        .json({
+          success: true,
+          message: "회원 가입이 완료되었습니다.",
+          user_id: user_id,
+          recommender_id: recommender_id || null,
+        });
     }
   } catch (error) {
     console.error(error);

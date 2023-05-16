@@ -35,8 +35,14 @@ exports.commentDeleteMid = async (req, res) => {
 // 좋아요
 exports.commentLikePostMid = async (req, res) => {
     try {
-        await Comment.likeComment(req.body.comment_id, req.body.liker_id);
-        res.status(200).send({message: "좋아요를 등록했습니다."});
+        result = await Comment.likeComment(req.body.comment_id, req.body.liker_id);
+        if (result == -1) {
+            res.status(400).send({message: "이미 좋아요를 눌렀습니다."});
+        } else if (result == 0) {
+            res.status(404).send({message: "오류가 발생했습니다."});
+        } else {
+            res.status(200).send({message: "좋아요를 등록했습니다."});
+        }
     } catch (error) {
         console.error(error);
         res.status(404).send({message: "오류가 발생했습니다."});

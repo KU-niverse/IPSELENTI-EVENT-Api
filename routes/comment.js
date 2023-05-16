@@ -1,21 +1,22 @@
 const express = require('express');
 const commentMid = require('../controllers/commentController');
+const { isSignedIn, isNotSignedIn } = require("../middlewares/sign_in");
 
 const router = express.Router();
 
 // POST /comment
-router.post('/', commentMid.commentPostMid);
+router.post('/', isSignedIn, commentMid.commentPostMid);
 
 // DELETE /comment
-router.delete('/', commentMid.commentDeleteMid);
+router.delete('/', isSignedIn, commentMid.commentDeleteMid);
 
 // POST /comment/like
-router.post('/like', commentMid.commentLikePostMid);
+router.post('/like', isSignedIn, commentMid.commentLikePostMid);
 
 // GET /comment/bytime
-router.get('/bytime', commentMid.commentByTimeGetMid);
+router.get('/bytime', isSignedIn, commentMid.commentByTimeGetMid);
 
 // GET /comment/bylike 
-router.get('/bylike', commentMid.commentByLikeGetMid);
+router.get('/bylike', isSignedIn, commentMid.commentByLikeGetMid);
 
 module.exports = router;
