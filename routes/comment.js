@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', isSignedIn, commentMid.commentPostMid);
 
 // DELETE /comment
-router.delete('/', isSignedIn, commentMid.commentDeleteMid);
+//router.delete('/', isSignedIn, commentMid.commentDeleteMid);
 
 // POST /comment/like
 router.post('/like', isSignedIn, commentMid.commentLikePostMid);
