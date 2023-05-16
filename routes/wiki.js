@@ -5,6 +5,7 @@ const router = express.Router();
 
 // 전체 글 불러오기 / 전체 글 수정시 사용
 router.get('/contents', wikiMid.contentsGetMid);
+//이거 요청할 때 /user/point/wikiaccess 도 같이 요청해야함
 
 // 전체 글 수정하기
 router.post('/contents', wikiMid.contentsPostMid);
