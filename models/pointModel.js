@@ -30,20 +30,53 @@ Point.getPoint = async (user_id, reason, point) => {
     //출석
     if (reason == 2) {
         const userAttendUpdate = await pool.query(
-            `UPDATE users SET isAttended = 1 WHERE user_id = ?`,
+            `UPDATE users SET is_attended = 1 WHERE user_id = ?`,
+            [user_id]
+        );
+    }
+
+    //위키 편집
+    if(reason == 5){
+        const userWikiEditUpdate = await pool.query(
+            `UPDATE users SET is_wiki_edited = is_wiki_edited + 1 WHERE user_id = ?`,
             [user_id]
         );
     }
 
     //위키 첫 접근
-    if (reason == 5) {
-        const userWikiUpdate = await pool.query(
-            `UPDATE users SET isVisited = 1 WHERE user_id = ?`,
+    if (reason == 6) {
+        const userVisitUpdate = await pool.query(
+            `UPDATE users SET is_visited = 1 WHERE user_id = ?`,
             [user_id]
         );
     }
 
     return userUpdate;
 };
+
+Point.isAttended = async (user_id) => {
+    const [rows] = await pool.query(
+        `SELECT is_attended FROM users WHERE user_id = ?`,
+        [user_id]
+    );
+    return rows[0].is_attended;
+};
+
+Point.isVisited = async (user_id) => {
+    const [rows] = await pool.query(
+        `SELECT is_visited FROM users WHERE user_id = ?`,
+        [user_id]
+    );
+    return rows[0].is_visited;
+};
+
+Point.isWikiEdited = async (user_id) => {
+    const [rows] = await pool.query(
+        `SELECT is_wiki_edited FROM users WHERE user_id = ?`,
+        [user_id]
+    );
+    return rows[0].is_wiki_edited;
+};
+
 
 module.exports = Point;
