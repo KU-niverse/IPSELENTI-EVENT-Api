@@ -48,7 +48,7 @@ CREATE TABLE wiki_history (
 CREATE TABLE celebrities (
     celebrity_id INT PRIMARY KEY AUTO_INCREMENT,
     celebrities_name VARCHAR(15) NOT NULL,
-    celebrity_image text, NOT NULL, /*text로 타입 수정*/
+    celebrity_image text NOT NULL, /*text로 타입 수정*/
     betting_amount INT DEFAULT 0
 );
 
