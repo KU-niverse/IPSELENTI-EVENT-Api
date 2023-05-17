@@ -62,10 +62,14 @@ exports.celebsGetAllMid = async (req, res) => {
 exports.BettingHistoryGetMid = async (req, res) => {
     try {
         const result = await BHistory.getBettingFromId(req.user[0].user_id, req.params.artistid);
+        let user_total_betting_amount = 0;
+        result[0].forEach(obj => {
+            user_total_betting_amount += obj.betting_point;
+        });
         const bhistory = result[0];
         const user_point = result[1];
         const betting_amount_sum = await Celebrity.getBettingAmountSum();
-        const total_result = {"history": bhistory, "betting_amount_sum": betting_amount_sum.total_betting_amount, "user_point": user_point[0][0].point}
+        const total_result = {"history": bhistory, "user_total_betting_amout": user_total_betting_amount, "user_point": user_point[0][0].point,"betting_amount_sum": betting_amount_sum.total_betting_amount}
         res.status(200).send(total_result);
     } catch (error) {
         console.error(error);
@@ -77,12 +81,34 @@ exports.BettingHistoryGetMid = async (req, res) => {
 exports.BettingPointPutMid = async (req, res) => {
     try {
         if (req.body) {
-            const newBhistroy = new BHistory({
-                celebrity_id: req.params.artistid,
-                betting_user: req.user[0].user_id,
-                betting_point: req.body.betting_point,
-            })
-            const [result] = await BHistory.putBetting(newBhistroy);
+            
+            const history = await BHistory.getBettingFromId(req.user[0].user_id, req.params.artistid);
+            let user_total_betting_amount = 0;
+            history[0].forEach(obj => {
+                user_total_betting_amount += obj.betting_point;
+            });
+            console.log('Total Betting Point:', user_total_betting_amount);
+            
+            betting_point = req.body.betting_point;
+
+            let result;
+
+            if (!history[0]) {
+                const newBhistroy = new BHistory({
+                    celebrity_id: req.params.artistid,
+                    betting_user: req.user[0].user_id,
+                    betting_point: req.body.betting_point,
+                })
+                result = await BHistory.putBetting(newBhistroy);
+            } else {
+                const newBhistroy = new BHistory({
+                    celebrity_id: req.params.artistid,
+                    betting_user: req.user[0].user_id,
+                    betting_point: req.body.betting_point - user_total_betting_amount,
+                })
+                result = await BHistory.putBetting(newBhistroy);
+            }
+
             if (result.affectedRows != 0) {
                 res.status(200).send({message: "베팅을 완료했습니다."});
             }

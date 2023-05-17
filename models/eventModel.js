@@ -78,9 +78,9 @@ BHistory.getBettingFromId = async(user_id, celebrity_id) => {
 // 베팅하기 함수
 BHistory.putBetting = async(newBHistory) => {
     const [result] = await pool.query(`INSERT INTO betting_history SET ?`, newBHistory);
-    const userupdate = await pool.query(`UPDATE users SET point = point - ? WHERE user_id = ?`, [newBHistory.betting_point, newBHistory.betting_user]);
-    const celebupdate = await pool.query(`UPDATE celebrities SET betting_amount = betting_amount + ? WHERE celebrity_id = ?`, [newBHistory.betting_point, newBHistory.celebrity_id]);
-    return result, userupdate, celebupdate;
+    await pool.query(`UPDATE users SET point = point - ? WHERE user_id = ?`, [newBHistory.betting_point, newBHistory.betting_user]);
+    await pool.query(`UPDATE celebrities SET betting_amount = betting_amount + ? WHERE celebrity_id = ?`, [newBHistory.betting_point, newBHistory.celebrity_id]);
+    return result;
 }
 
 
