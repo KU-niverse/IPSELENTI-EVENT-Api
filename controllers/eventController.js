@@ -10,7 +10,7 @@ exports.requestPostMid = async (req, res) => {
             });
         } else {
             const newRequest = new Request({
-                requester_id: req.body.requester_id,
+                requester_id: req.user[0].user_id,
                 celebrity_name: req.body.celebrity_name,
                 request_reason: req.body.request_reason,
             })
@@ -26,7 +26,7 @@ exports.requestPostMid = async (req, res) => {
 // 가수 등록 요청 목록 조회
 exports.requestGetByIdMid = async (req, res) => {
     try {
-        const requests = await Request.getRequestFromId(req.body.requester_id);
+        const requests = await Request.getRequestFromId(req.user[0].user_id);
         res.status(200).send(requests);
     } catch (error) {
         console.error(error);
@@ -37,7 +37,7 @@ exports.requestGetByIdMid = async (req, res) => {
 // 내가 베팅한 가수 조회
 exports.bettingGetMid = async (req, res) => {
     try {
-        const bettings = await Betting.getBetting(req.params.userid);
+        const bettings = await Betting.getBetting(req.user[0].user_id);
         res.status(200).send(bettings);
     } catch (error) {
         console.error(error);
@@ -61,7 +61,7 @@ exports.celebsGetAllMid = async (req, res) => {
 // 특정 가수에 대한 유저의 베팅 정보 + 총 베팅 포인트 금액 + 내 남은 포인트 금액 조회
 exports.BettingHistoryGetMid = async (req, res) => {
     try {
-        const result = await BHistory.getBettingFromId(req.params.userid, req.params.artistid);
+        const result = await BHistory.getBettingFromId(req.user[0].user_id, req.params.artistid);
         const bhistory = result[0];
         const user_point = result[1];
         const betting_amount_sum = await Celebrity.getBettingAmountSum();
@@ -79,7 +79,7 @@ exports.BettingPointPutMid = async (req, res) => {
         if (req.body) {
             const newBhistroy = new BHistory({
                 celebrity_id: req.params.artistid,
-                betting_user: req.params.userid,
+                betting_user: req.user[0].user_id,
                 betting_point: req.body.betting_point,
             })
             const [result] = await BHistory.putBetting(newBhistroy);
