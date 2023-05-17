@@ -1,6 +1,7 @@
 const bycrypt = require("bcrypt");
 const passport = require("passport");
 const User = require("../../models/userModel.js");
+const Point = require("../../models/pointModel.js");
 
 //회원가입
 exports.signUp = async (req, res, next) => {
@@ -33,12 +34,20 @@ exports.signUp = async (req, res, next) => {
         bad: 0,
         is_admin: false,
       });
-      return res.status(201).json({
-        success: true,
-        message: "회원 가입이 완료되었습니다.",
-        user_id: user_id,
-        recommender_id: recommender_id || null,
-      });
+      await Point.getPoint(user_id, 1, 10000);
+      if (exRecommender.length != 0) {
+        //추천인이 존재한다면, 추천인, 본인에게 포인트 지급
+        await Point.getPoint(recommender_id, 3, 20000);
+        await Point.getPoint(user_id, 4, 30000);
+      }
+      return res
+        .status(201)
+        .json({
+          success: true,
+          message: "회원 가입이 완료되었습니다.",
+          user_id: user_id,
+          recommender_id: recommender_id || null,
+        });
     }
   } catch (error) {
     console.error(error);

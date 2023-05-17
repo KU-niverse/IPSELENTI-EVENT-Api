@@ -17,7 +17,8 @@ const userRoutes = require("./routes/user");
 const commentRoutes = require("./routes/comment");
 const wikiRoutes = require("./routes/wiki");
 const eventRoutes = require("./routes/event");
-
+const mypageRoutes = require("./routes/user/mypage");
+const pointRoutes = require("./routes/user/point");
 dotenv.config();
 const redisClient = redis.createClient({
   url: `redis://${process.env.REDIS_USERNAME}:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/0`,
@@ -75,7 +76,6 @@ if (process.env.NODE_ENV === 'production') {
 app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 app.use("/user", userRoutes);
 app.use("/comment", commentRoutes);

@@ -10,6 +10,9 @@ CREATE TABLE users (
     point INT DEFAULT 0,
     bad INT DEFAULT 0,
     is_admin BOOL DEFAULT FALSE,
+    is_attended BOOL DEFAULT FALSE,
+    is_visited BOOL DEFAULT FALSE,
+    is_wiki_edited INT DEFAULT 0,
     FOREIGN KEY (recommender_id) REFERENCES users(user_id)
 );
 
