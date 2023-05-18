@@ -58,7 +58,7 @@ exports.celebsGetAllMid = async (req, res) => {
     }   
 }
 
-// 특정 가수에 대한 유저의 베팅 정보 + 총 베팅 포인트 금액 + 내 남은 포인트 금액 조회
+// 로그인한 유저가 특정 가수에 베팅한 히스토리 + 총합해서 얼마나 해당 가수에 베팅했는지 + 유저의 현재 남은 포인트 + 전체 가수의 베팅 포인트 총합 조회
 exports.BettingHistoryGetMid = async (req, res) => {
     try {
         const result = await BHistory.getBettingFromId(req.user[0].user_id, req.params.artistid);
@@ -69,7 +69,7 @@ exports.BettingHistoryGetMid = async (req, res) => {
         const bhistory = result[0];
         const user_point = result[1];
         const betting_amount_sum = await Celebrity.getBettingAmountSum();
-        const total_result = {"history": bhistory, "user_total_betting_amout": user_total_betting_amount, "user_point": user_point[0][0].point,"betting_amount_sum": betting_amount_sum.total_betting_amount}
+        const total_result = {"history": bhistory, "user_total_betting_amount": user_total_betting_amount, "user_point": user_point[0][0].point,"betting_amount_sum": betting_amount_sum.total_betting_amount}
         res.status(200).send(total_result);
     } catch (error) {
         console.error(error);
@@ -87,9 +87,6 @@ exports.BettingPointPutMid = async (req, res) => {
             history[0].forEach(obj => {
                 user_total_betting_amount += obj.betting_point;
             });
-            console.log('Total Betting Point:', user_total_betting_amount);
-            
-            betting_point = req.body.betting_point;
 
             let result;
 
