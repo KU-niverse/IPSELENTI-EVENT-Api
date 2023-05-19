@@ -88,3 +88,10 @@ CREATE TABLE celebrity_request(
     FOREIGN KEY (requester_id) REFERENCES users(user_id)
 );
 
+CREATE EVENT IF NOT EXISTS reset_daily_values
+ON SCHEDULE EVERY 1 DAY STARTS '2023-05-14 00:00:00'
+DO
+  UPDATE users
+  SET is_attended = FALSE, 
+      is_visited = FALSE, 
+      is_wiki_edited = 0;
