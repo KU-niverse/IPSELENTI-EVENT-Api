@@ -22,7 +22,7 @@ const pointRoutes = require("./routes/user/point");
 dotenv.config();
 const redisClient = redis.createClient({
   url: `redis://${process.env.REDIS_USERNAME}:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/0`,
-  legacyMode: true, // 반드시 설정 !!
+  legacyMode: true,
 });
 redisClient.on('connect', () => {
   console.info(`Redis connected`);
@@ -49,10 +49,14 @@ if (process.env.NODE_ENV === 'production') {
   app.use(morgan("dev"));
 }
 
-const corsOptions = {
-  origin: "http://localhost:3000", // 클라이언트 앱의 URL을 입력하세요.
+let corsOptions = {
+  origin: "http://localhost:3000",
   credentials: true,
 };
+
+if(process.env.NODE_ENV === 'production') {
+  corsOptions.origin = "http://118.67.131.182"
+}
 
 app.use(cors(corsOptions));
 
