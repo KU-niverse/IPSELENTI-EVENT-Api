@@ -1,5 +1,6 @@
 const Wiki_history = require("../models/wikiModel.js");
 const fs = require("fs");
+const Point = require("../models/pointModel.js");
 
 //TODO: POST 요청에 사용자가 로그인 했는지 확인
 //TODO: 문서 수정시 사용자에게 보상 지급
@@ -156,11 +157,35 @@ exports.contentsPostMid = async (req, res) => {
     console.log(rows_history);
 
 
-    // TODO : point 주는 api 요청
+    // point 주는 api 요청
+    try {
+        const reason = 5;
+        const point = 15000;
+        const user_id = req.user[0].user_id;
+        req.user_id = user_id;
+        req.reason = reason;
+        req.point = point;
+        const isWikiEdited = await Point.isWikiEdited(user_id);
+        console.log(isWikiEdited);
+        if (isWikiEdited >= 3) {
+            return res
+                .status(210)
+                .json({ success: true, message: "전체 글이 업데이트 됐고, 이미 당일 수정으로 인한 포인트를 모두 받았습니다." });
+        }
+        else if (isWikiEdited < 3) {
+            await Point.getPoint(user_id, reason, point);
+            return res
+                .status(200)
+                .json({ success: true, message: "전체 글이 업데이트 됐고, 15000 포인트가 지급되었습니다." });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(404).send({ message: "오류가 발생했습니다." });
+    }
 
-    res.status(200).send({
-        message: "Successfully updated",
-    });
+    // res.status(200).send({
+    //     message: "Successfully updated",
+    // });
 };
 
 
@@ -306,7 +331,7 @@ exports.contentsSectionPostMid = async (req, res) => {
         const rows_history = await Wiki_history.create(newWiki_history);
         console.log(rows_history);
 
-    } catch (err){
+    } catch (err) {
         res.status(432).send({
             message: "Something went wrong while making history",
             newContent: req.body.newContent
@@ -315,10 +340,34 @@ exports.contentsSectionPostMid = async (req, res) => {
     }
 
     // point 주는 api 요청
+    try {
+        const reason = 5;
+        const point = 15000;
+        const user_id = req.user[0].user_id;
+        req.user_id = user_id;
+        req.reason = reason;
+        req.point = point;
+        const isWikiEdited = await Point.isWikiEdited(user_id);
+        console.log(isWikiEdited);
+        if (isWikiEdited >= 3) {
+            return res
+                .status(210)
+                .json({ success: true, message: "section이 업데이트 됐고, 이미 당일 수정으로 인한 포인트를 모두 받았습니다." });
+        }
+        else if (isWikiEdited < 3) {
+            await Point.getPoint(user_id, reason, point);
+            return res
+                .status(200)
+                .json({ success: true, message: "section이 업데이트 됐고, 15000 포인트가 지급되었습니다." });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(404).send({ message: "오류가 발생했습니다." });
+    }
 
-    res.status(200).send({
-        message: "Section is updated successfully",
-    });
+    // res.status(200).send({
+    //     message: "Section is updated successfully",
+    // });
 };
 
 // 수정 내역 불러오기
