@@ -34,11 +34,11 @@ exports.signUp = async (req, res, next) => {
         bad: 0,
         is_admin: false,
       });
-      await Point.getPoint(user_id, 1, 10000);
+      await Point.getPoint(user_id, 1, 30000);
       if (exRecommender.length != 0) {
         //추천인이 존재한다면, 추천인, 본인에게 포인트 지급
-        await Point.getPoint(recommender_id, 3, 20000);
-        await Point.getPoint(user_id, 4, 30000);
+        await Point.getPoint(recommender_id, 3, 30000);
+        await Point.getPoint(user_id, 4, 20000);
       }
       return res
         .status(201)
