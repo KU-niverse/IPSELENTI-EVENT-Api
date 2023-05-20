@@ -49,10 +49,14 @@ if (process.env.NODE_ENV === "production") {
   app.use(morgan("dev"));
 }
 
-const corsOptions = {
-  origin: "http://localhost:3000", // 클라이언트 앱의 URL을 입력하세요.
+let corsOptions = {
+  origin: "http://localhost:3000",
   credentials: true,
 };
+
+if(process.env.NODE_ENV === 'production') {
+  corsOptions.origin = "http://118.67.131.182"
+}
 
 app.use(cors(corsOptions));
 
