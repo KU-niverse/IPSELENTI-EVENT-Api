@@ -11,6 +11,7 @@ router.post("/celebrityrequest", isSignedIn, eventMid.requestPostMid);
 router.get("/celebrityrequest", isSignedIn, eventMid.requestGetByIdMid);
 
 // GET /event/celebrities
+
 router.get("/celebrities", eventMid.celebsGetAllMid);
 
 // GET /event/artist/:artistid

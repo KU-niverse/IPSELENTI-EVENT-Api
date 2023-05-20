@@ -55,7 +55,7 @@ let corsOptions = {
 };
 
 if(process.env.NODE_ENV === 'production') {
-  corsOptions.origin = "http://118.67.131.182"
+  corsOptions.origin = "http://asku.wiki"
 }
 
 app.use(cors(corsOptions));
@@ -64,7 +64,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookiParser(process.env.COOKIE_SECRET));
 const sessionOption = {
-  //secret: 'secret',
   resave: false,
   saveUninitialized: false,
   secret: process.env.COOKIE_SECRET,
