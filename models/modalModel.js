@@ -17,14 +17,12 @@ Modal.getMostBetting = async (id, name, point) => {
   const [rows3] = await pool.query(
     `select sum(betting_amount) from celebrities`
   );
-  const [rows4] = await pool.query(
-    `select * from celebrities where celebrity_id = ?`,
-    [rows[0].celebrity_id]
-  );
+
   const result = {
     user_name: name,
+    celebrity_amount: rows2[0].betting_amount,
     celebrity_name: rows2[0].celebrities_name,
-    betting_amount: rows2[0].betting_amount,
+    betting_amount: rows[0].p1,
     total_amount: rows3[0]["sum(betting_amount)"],
     user_point: point,
   };
