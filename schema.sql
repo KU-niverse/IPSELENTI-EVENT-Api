@@ -102,3 +102,5 @@ DO
   SET is_attended = FALSE, 
       is_visited = FALSE, 
       is_wiki_edited = 0;
+
+SET GLOBAL event_scheduler = ON;

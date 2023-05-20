@@ -57,7 +57,8 @@ let corsOptions = {
 };
 
 if(process.env.NODE_ENV === 'production') {
-  corsOptions.origin = "https://asku.wiki"
+  corsOptions.origin = "https://asku.wiki";
+  corsOptions.credentials = true;
 }
 
 app.use(cors(corsOptions));
@@ -68,14 +69,14 @@ app.use(cookiParser(process.env.COOKIE_SECRET));
 const sessionOption = {
   //secret: 'secret',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   secret: process.env.COOKIE_SECRET,
   cookie: {
     httpOnly: true,
     secure: false,
     sameSite: "lax",
   },
-  store: new RedisStore({ client: redisClient, prefix: "session: ", db: 0 }),
+  store: new RedisStore({ client: redisClient, prefix: "session: ", db: 0, path:'./sessions' }),
 };
 if (process.env.NODE_ENV === "production") {
   sessionOption.proxy = true;
