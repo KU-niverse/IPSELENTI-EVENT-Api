@@ -9,7 +9,7 @@ exports.shareInfo = async (req, res) => {
       req.user[0].point
     );
     console.log(result);
-    return res.status(201).json(result);
+    return res.status(201).json({ success: true, data: result });
   } catch (error) {
     console.error(error);
     res.status(404).send({ message: "오류가 발생했습니다." });
