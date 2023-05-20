@@ -8,10 +8,10 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const passport = require("passport");
 const passportConfig = require("./passport");
-const helmet = require('helmet');
-const hpp = require('hpp');
-const redis = require('redis');
-const RedisStore = require('connect-redis').default;
+const helmet = require("helmet");
+const hpp = require("hpp");
+const redis = require("redis");
+const RedisStore = require("connect-redis").default;
 
 const userRoutes = require("./routes/user");
 const commentRoutes = require("./routes/comment");
@@ -19,14 +19,15 @@ const wikiRoutes = require("./routes/wiki");
 const eventRoutes = require("./routes/event");
 const mypageRoutes = require("./routes/user/mypage");
 const pointRoutes = require("./routes/user/point");
+
 dotenv.config();
 const redisClient = redis.createClient({
   url: `redis://${process.env.REDIS_USERNAME}:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/0`,
 });
-redisClient.on('connect', () => {
+redisClient.on("connect", () => {
   console.info(`Redis connected`);
 });
-redisClient.on('error', (err) => {
+redisClient.on("error", (err) => {
   console.error(`Redis Client Error`, err);
 });
 redisClient.connect().then();
@@ -34,13 +35,14 @@ redisClient.connect().then();
 const app = express();
 passportConfig();
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(morgan('combined'));
-  app.use(helmet({
-    contentSecurityPolicy: false,
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: false,
-  }),
+if (process.env.NODE_ENV === "production") {
+  app.use(morgan("combined"));
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+      crossOriginResourcePolicy: false,
+    })
   );
   app.use(hpp());
 } else {
@@ -67,9 +69,9 @@ const sessionOption = {
     secure: false,
     sameSite: "lax",
   },
-  store: new RedisStore({ client: redisClient, prefix: 'session: ', db: 0 }),
+  store: new RedisStore({ client: redisClient, prefix: "session: ", db: 0 }),
 };
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   sessionOption.proxy = true;
   sessionOption.cookie.secure = true;
 }

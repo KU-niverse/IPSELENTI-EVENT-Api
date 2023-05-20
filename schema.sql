@@ -1,4 +1,6 @@
-CREATE DATABASE IPSELENTI_EVENT_Api;
+CREATE DATABASE IPSELENTI_EVENT_Api
+    CHARACTER SET utf8
+    COLLATE utf8_general_ci;
 USE IPSELENTI_EVENT_Api;
 
 CREATE TABLE users (
@@ -63,20 +65,25 @@ CREATE TABLE betting_history (
 );
 
 /* 먼저 데이터값 넣어둬야함 */
-/* CREATE TABLE point_reason(
+CREATE TABLE point_reason(
     reason_id INT PRIMARY KEY AUTO_INCREMENT,
-    point_reason TEXT,
+    point_reason VARCHAR(50),
     amount INT
 );
- */
+insert into point_reason (point_reason, amount) values ('회원가입', 10000);
+insert into point_reason (point_reason, amount) values ('출석', 150000);
+insert into point_reason (point_reason, amount) values ('추천인으로 지목당했을 때', 20000);
+insert into point_reason (point_reason, amount) values ('추천인을 지목했을 때', 30000);
+insert into point_reason (point_reason, amount) values ('위키 수정', 150000);
+insert into point_reason (point_reason, amount) values ('위키 첫 접근', 5000);
+
 CREATE TABLE point_history(
     point_history_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id VARCHAR(10) NOT NULL,
     reason_id INT,
     point_amount INT,
     point_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (reason_id) REFERENCES point_reason(reason_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE celebrity_request(
