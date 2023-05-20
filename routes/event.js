@@ -11,7 +11,7 @@ router.post('/celebrityrequest', isSignedIn, eventMid.requestPostMid);
 router.get('/celebrityrequest', isSignedIn, eventMid.requestGetByIdMid);
 
 // GET /event/celebrities
-router.get('/celebrities', isSignedIn, eventMid.celebsGetAllMid);
+router.get('/celebrities', eventMid.celebsGetAllMid);
 
 // GET /event/artist/:artistid
 router.get('/artist/:artistid', isSignedIn, eventMid.BettingHistoryGetMid);
