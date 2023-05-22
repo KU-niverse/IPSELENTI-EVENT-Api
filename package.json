@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start app.js --watch",
+    "start": "pm2 start app.js --watch --ignore-watch='documents/*'",
     "dev": "nodemon app"
   },
   "repository": {

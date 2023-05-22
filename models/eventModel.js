@@ -93,7 +93,7 @@ BHistory.getBettingFromId = async (user_id, celebrity_id) => {
     `SELECT point FROM users WHERE user_id = ?`,
     [user_id]
   );
-  return [result[0], user_point];
+  return [result[0], user_point[0]];
 };
 
 // 베팅하기 함수
