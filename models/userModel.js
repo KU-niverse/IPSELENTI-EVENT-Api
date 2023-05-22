@@ -25,6 +25,11 @@ User.create = async (newUser) => {
   return rows;
 };
 
+User.changePW = async (password, user_id, phone_number) => {
+  const [rows] = await pool.query(`UPDATE users SET password = ? WHERE user_id = ? AND phone_number = ?`, [password, user_id, phone_number]);
+  return rows;
+}
+
 User.wikiHistory = async (user_id) => {
   const [rows] = await pool.query(
     "SELECT * FROM wiki_history WHERE editor_id = ?",

@@ -99,3 +99,19 @@ exports.signOut = (req, res) => {
     return next(error);
   }
 };
+
+//비밀번호 변경
+exports.changePW = async (req, res) => {
+  try {
+    const newPW = await bycrypt.hash(req.body.password, 12);
+    result = await User.changePW(newPW, req.body.user_id, req.body.phone_number);
+    if (result.affectedRows) {
+      return res.status(200).send("비밀번호가 변경되었습니다.");
+    } else {
+      return res.status(400).send("입력값을 확인해주세요.");
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(404).send("오류가 발생했습니다.");
+  }
+}
