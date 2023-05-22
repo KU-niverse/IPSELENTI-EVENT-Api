@@ -36,7 +36,7 @@ User.wikiHistory = async (user_id) => {
 
 User.bettingHistory = async (user_id) => {
   const [rows] = await pool.query(
-    "SELECT * FROM betting_history WHERE betting_user = ?",
+    "SELECT celebrity_id, SUM(betting_point) AS total_betting FROM betting_history WHERE betting_user = ?  GROUP BY celebrity_id",
     [user_id]
   );
   return rows;
