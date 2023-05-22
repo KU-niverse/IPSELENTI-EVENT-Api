@@ -1,5 +1,5 @@
 const express = require("express");
-const cookiParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const path = require("path");
 const session = require("express-session");
@@ -54,15 +54,15 @@ let corsOptions = {
   credentials: true,
 };
 
-if(process.env.NODE_ENV === 'production') {
-  corsOptions.origin = "http://asku.wiki"
+if (process.env.NODE_ENV === "production") {
+  corsOptions.origin = "http://asku.wiki";
 }
 
 app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookiParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 const sessionOption = {
   resave: false,
   saveUninitialized: false,
@@ -75,7 +75,7 @@ const sessionOption = {
   store: new RedisStore({ client: redisClient, prefix: "session: ", db: 0 }),
 };
 if (process.env.NODE_ENV === "production") {
-  //sessionOption.proxy = false;
+  sessionOption.proxy = true;
   sessionOption.cookie.secure = true;
 }
 app.use(session(sessionOption));
