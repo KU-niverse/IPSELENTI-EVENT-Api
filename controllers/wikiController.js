@@ -413,7 +413,7 @@ exports.historyVersionPostMid = async (req, res) => {
 
     // 전체 글 저장하는 새 파일(버전) 만들기
     const latestVersion = parseInt(rows[0].text_pointer.substring(1));
-    const rollbackVersion = parseInt(req.params.version[1]);
+    const rollbackVersion = parseInt(req.params.version[1].substr(1));
     const updatedFileName = `./documents/r${latestVersion + 1}.wiki`;
     const originalFileName = `./documents/r${rollbackVersion}.wiki`;
 
