@@ -87,7 +87,7 @@ exports.BettingPointPutMid = async (req, res) => {
         history[0].forEach(obj => {
             user_total_betting_amount += obj.betting_point;
         });
-        if (req.body && req.body.betting_point > 0 && req.body.betting_point - user_total_betting_amount <= history[1][0].point) {
+        if (req.body && req.body.betting_point >= 0 && req.body.betting_point - user_total_betting_amount <= history[1][0].point) {
 
             let result;
 
