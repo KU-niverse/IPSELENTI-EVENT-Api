@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production PORT=8080 pm2 start app.js",
+    "start": "pm2 start app.js --watch --ignore-watch='documents/*'",
     "dev": "nodemon app"
   },
   "repository": {

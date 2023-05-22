@@ -63,13 +63,15 @@ exports.BettingHistoryGetMid = async (req, res) => {
     try {
         const result = await BHistory.getBettingFromId(req.user[0].user_id, req.params.artistid);
         let user_total_betting_amount = 0;
-        result[0].forEach(obj => {
-            user_total_betting_amount += obj.betting_point;
-        });
+        if (result[0]) {
+            result[0].forEach(obj => {
+                user_total_betting_amount += obj.betting_point;
+            });
+        }
         const bhistory = result[0];
         const user_point = result[1];
         const betting_amount_sum = await Celebrity.getBettingAmountSum();
-        const total_result = {"history": bhistory, "user_total_betting_amount": user_total_betting_amount, "user_point": user_point[0][0].point,"betting_amount_sum": betting_amount_sum.total_betting_amount}
+        const total_result = {"history": bhistory, "user_total_betting_amount": user_total_betting_amount, "user_point": user_point[0].point,"betting_amount_sum": betting_amount_sum.total_betting_amount}
         res.status(200).send(total_result);
     } catch (error) {
         console.error(error);
@@ -80,13 +82,12 @@ exports.BettingHistoryGetMid = async (req, res) => {
 // 해당 가수에 베팅하기
 exports.BettingPointPutMid = async (req, res) => {
     try {
-        if (req.body) {
-            
-            const history = await BHistory.getBettingFromId(req.user[0].user_id, req.params.artistid);
-            let user_total_betting_amount = 0;
-            history[0].forEach(obj => {
-                user_total_betting_amount += obj.betting_point;
-            });
+        const history = await BHistory.getBettingFromId(req.user[0].user_id, req.params.artistid);
+        let user_total_betting_amount = 0;
+        history[0].forEach(obj => {
+            user_total_betting_amount += obj.betting_point;
+        });
+        if (req.body && req.body.betting_point >= 0 && req.body.betting_point - user_total_betting_amount <= history[1][0].point) {
 
             let result;
 
@@ -108,12 +109,11 @@ exports.BettingPointPutMid = async (req, res) => {
 
             if (result.affectedRows != 0) {
                 res.status(200).send({message: "베팅을 완료했습니다."});
-            }
-            else {
+            } else {
                 res.status(403).send({message: "베팅에 실패했습니다."});
             }
         } else {
-            res.status(400).send({message: "베팅할 포인트를 입력해주세요."});
+            res.status(400).send({message: "베팅 포인트에 오류가 발생했습니다."});
         }
     } catch (error) {
         console.error(error);

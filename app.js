@@ -1,5 +1,5 @@
 const express = require("express");
-const cookiParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const path = require("path");
 const session = require("express-session");
@@ -55,14 +55,14 @@ let corsOptions = {
 };
 
 if(process.env.NODE_ENV === 'production') {
-  corsOptions.origin = "http://asku.wiki"
+  corsOptions.origin = "http://118.67.131.182"
 }
 
 app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookiParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 const sessionOption = {
   resave: false,
   saveUninitialized: false,
