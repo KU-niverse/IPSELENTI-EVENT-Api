@@ -63,9 +63,11 @@ exports.BettingHistoryGetMid = async (req, res) => {
     try {
         const result = await BHistory.getBettingFromId(req.user[0].user_id, req.params.artistid);
         let user_total_betting_amount = 0;
-        result[0].forEach(obj => {
-            user_total_betting_amount += obj.betting_point;
-        });
+        if (result[0]) {
+            result[0].forEach(obj => {
+                user_total_betting_amount += obj.betting_point;
+            });
+        }
         const bhistory = result[0];
         const user_point = result[1];
         const betting_amount_sum = await Celebrity.getBettingAmountSum();
