@@ -69,7 +69,7 @@ exports.BettingHistoryGetMid = async (req, res) => {
         const bhistory = result[0];
         const user_point = result[1];
         const betting_amount_sum = await Celebrity.getBettingAmountSum();
-        const total_result = {"history": bhistory, "user_total_betting_amount": user_total_betting_amount, "user_point": user_point[0][0].point,"betting_amount_sum": betting_amount_sum.total_betting_amount}
+        const total_result = {"history": bhistory, "user_total_betting_amount": user_total_betting_amount, "user_point": user_point[0].point,"betting_amount_sum": betting_amount_sum.total_betting_amount}
         res.status(200).send(total_result);
     } catch (error) {
         console.error(error);
