@@ -89,29 +89,30 @@ exports.BettingPointPutMid = async (req, res) => {
         });
         if (req.body && req.body.betting_point >= 0 && req.body.betting_point - user_total_betting_amount <= history[1][0].point) {
 
-            let result;
+            res.status(403).send({message: "베팅 기한이 아닙니다."});
 
-            if (!history[0]) {
-                const newBhistroy = new BHistory({
-                    celebrity_id: req.params.artistid,
-                    betting_user: req.user[0].user_id,
-                    betting_point: req.body.betting_point,
-                })
-                result = await BHistory.putBetting(newBhistroy);
-            } else {
-                const newBhistroy = new BHistory({
-                    celebrity_id: req.params.artistid,
-                    betting_user: req.user[0].user_id,
-                    betting_point: req.body.betting_point - user_total_betting_amount,
-                })
-                result = await BHistory.putBetting(newBhistroy);
-            }
+            // let result;
+            // if (!history[0]) {
+            //     const newBhistroy = new BHistory({
+            //         celebrity_id: req.params.artistid,
+            //         betting_user: req.user[0].user_id,
+            //         betting_point: req.body.betting_point,
+            //     })
+            //     result = await BHistory.putBetting(newBhistroy);
+            // } else {
+            //     const newBhistroy = new BHistory({
+            //         celebrity_id: req.params.artistid,
+            //         betting_user: req.user[0].user_id,
+            //         betting_point: req.body.betting_point - user_total_betting_amount,
+            //     })
+            //     result = await BHistory.putBetting(newBhistroy);
+            // }
 
-            if (result.affectedRows != 0) {
-                res.status(200).send({message: "베팅을 완료했습니다."});
-            } else {
-                res.status(403).send({message: "베팅에 실패했습니다."});
-            }
+            // if (result.affectedRows != 0) {
+            //     res.status(200).send({message: "베팅을 완료했습니다."});
+            // } else {
+            //     res.status(403).send({message: "베팅에 실패했습니다."});
+            // }
         } else {
             res.status(400).send({message: "베팅 포인트에 오류가 발생했습니다."});
         }
