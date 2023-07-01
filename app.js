@@ -32,6 +32,13 @@ redisClient.on("error", (err) => {
 });
 redisClient.connect().then();
 
+const userRoutes = require("./routes/user");
+/* const commentRoutes = require("./routes/comment");
+const wikiRoutes = require("./routes/wiki");
+const eventRoutes = require("./routes/event"); */
+const mypageRoutes = require("./routes/user/myPage");
+
+dotenv.config();
 const app = express();
 passportConfig();
 
@@ -83,7 +90,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/user", userRoutes);
-app.use("/comment", commentRoutes);
+/* app.use("/comment", commentRoutes);
 app.use("/wiki", wikiRoutes);
 app.use("/event", eventRoutes);
 
