@@ -6,6 +6,7 @@ const {
   signUp,
   signIn,
   signOut,
+  changePW
 } = require("../../controllers/userController/auth");
 
 const router = express.Router();
@@ -22,4 +23,8 @@ router.get("/issignedin", isSignedIn, (req, res) => {
     .status(201)
     .json({ success: true, message: "로그인한 상태입니다." });
 });
+
+router.post("/changepw", changePW);
+
 module.exports = router;
+

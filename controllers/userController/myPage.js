@@ -35,12 +35,18 @@ exports.wikiHistory = async (req, res, err) => {
 };
 
 //get user betting history
-exports.bettingHistory = async (req, res, err) => {
+exports.bettingHistory = async (req, res, next) => {
   try {
     const userHistory = await User.bettingHistory(req.user[0].user_id);
+    /* return res.status(200).json({
+      success: true,
+      bettingHistory: userHistory || [],
+    }); */
+    bettingHistorySum = await User.bettingHistorySum(req.user[0].user_id);
     return res.status(200).json({
       success: true,
       bettingHistory: userHistory || [],
+      bettingHistorySum: bettingHistorySum || [],
     });
   } catch (error) {
     console.error(error);

@@ -25,6 +25,11 @@ User.create = async (newUser) => {
   return rows;
 };
 
+User.changePW = async (password, user_id, phone_number) => {
+  const [rows] = await pool.query(`UPDATE users SET password = ? WHERE user_id = ? AND phone_number = ?`, [password, user_id, phone_number]);
+  return rows;
+}
+
 User.wikiHistory = async (user_id) => {
   const [rows] = await pool.query(
     "SELECT * FROM wiki_history WHERE editor_id = ?",
@@ -37,6 +42,15 @@ User.wikiHistory = async (user_id) => {
 User.bettingHistory = async (user_id) => {
   const [rows] = await pool.query(
     "SELECT * FROM betting_history WHERE betting_user = ?",
+    [user_id]
+  );
+
+  return rows;
+};
+
+User.bettingHistorySum = async (user_id) => {
+  const [rows] = await pool.query(
+    "SELECT celebrity_id, SUM(betting_point) AS total_betting FROM betting_history WHERE betting_user = ?  GROUP BY celebrity_id",
     [user_id]
   );
   return rows;

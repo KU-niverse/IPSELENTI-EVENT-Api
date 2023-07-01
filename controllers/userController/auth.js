@@ -1,6 +1,7 @@
 const bycrypt = require("bcrypt");
 const passport = require("passport");
 const User = require("../../models/userModel.js");
+const Point = require("../../models/pointModel.js");
 
 //회원가입
 exports.signUp = async (req, res, next) => {
@@ -33,9 +34,20 @@ exports.signUp = async (req, res, next) => {
         bad: 0,
         is_admin: false,
       });
+      await Point.getPoint(user_id, 1, 30000);
+      if (exRecommender.length != 0) {
+        //추천인이 존재한다면, 추천인, 본인에게 포인트 지급
+        await Point.getPoint(recommender_id, 3, 30000);
+        await Point.getPoint(user_id, 4, 20000);
+      }
       return res
         .status(201)
-        .json({ success: true, message: "회원 가입이 완료되었습니다." });
+        .json({
+          success: true,
+          message: "회원 가입이 완료되었습니다.",
+          user_id: user_id,
+          recommender_id: recommender_id || null,
+        });
     }
   } catch (error) {
     console.error(error);
@@ -87,3 +99,19 @@ exports.signOut = (req, res) => {
     return next(error);
   }
 };
+
+//비밀번호 변경
+exports.changePW = async (req, res) => {
+  try {
+    const newPW = await bycrypt.hash(req.body.password, 12);
+    result = await User.changePW(newPW, req.body.user_id, req.body.phone_number);
+    if (result.affectedRows) {
+      return res.status(200).send("비밀번호가 변경되었습니다.");
+    } else {
+      return res.status(400).send("입력값을 확인해주세요.");
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(404).send("오류가 발생했습니다.");
+  }
+}

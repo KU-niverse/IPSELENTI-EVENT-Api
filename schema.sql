@@ -1,4 +1,6 @@
-CREATE DATABASE IPSELENTI_EVENT_Api;
+CREATE DATABASE IPSELENTI_EVENT_Api
+    CHARACTER SET utf8
+    COLLATE utf8_general_ci;
 USE IPSELENTI_EVENT_Api;
 
 CREATE TABLE users (
@@ -10,6 +12,9 @@ CREATE TABLE users (
     point INT DEFAULT 0,
     bad INT DEFAULT 0,
     is_admin BOOL DEFAULT FALSE,
+    is_attended BOOL DEFAULT FALSE,
+    is_visited BOOL DEFAULT FALSE,
+    is_wiki_edited INT DEFAULT 0,
     FOREIGN KEY (recommender_id) REFERENCES users(user_id)
 );
 
@@ -26,8 +31,8 @@ CREATE TABLE comments_like (
     comment_id INT,
     liker_id VARCHAR(10),
     PRIMARY KEY (comment_id, liker_id),
-    FOREIGN KEY (comment_id) REFERENCES comments(comment_id),
-    FOREIGN KEY (liker_id) REFERENCES users(user_id)
+    FOREIGN KEY (comment_id) REFERENCES comments(comment_id) ON DELETE CASCADE,
+    FOREIGN KEY (liker_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE wiki_history (
@@ -45,7 +50,7 @@ CREATE TABLE wiki_history (
 CREATE TABLE celebrities (
     celebrity_id INT PRIMARY KEY AUTO_INCREMENT,
     celebrities_name VARCHAR(15) NOT NULL,
-    celebrity_image LONGBLOB, NOT NULL, /* 추가된 column */
+    celebrity_image text NOT NULL, /*text로 타입 수정*/
     betting_amount INT DEFAULT 0
 );
 
@@ -59,11 +64,18 @@ CREATE TABLE betting_history (
     FOREIGN KEY (betting_user) REFERENCES users(user_id)
 );
 
+/* 먼저 데이터값 넣어둬야함 */
 CREATE TABLE point_reason(
     reason_id INT PRIMARY KEY AUTO_INCREMENT,
-    point_reason TEXT,
+    point_reason VARCHAR(50),
     amount INT
 );
+insert into point_reason (point_reason, amount) values ('회원가입', 10000);
+insert into point_reason (point_reason, amount) values ('출석', 150000);
+insert into point_reason (point_reason, amount) values ('추천인으로 지목당했을 때', 20000);
+insert into point_reason (point_reason, amount) values ('추천인을 지목했을 때', 30000);
+insert into point_reason (point_reason, amount) values ('위키 수정', 150000);
+insert into point_reason (point_reason, amount) values ('위키 첫 접근', 5000);
 
 CREATE TABLE point_history(
     point_history_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -71,8 +83,7 @@ CREATE TABLE point_history(
     reason_id INT,
     point_amount INT,
     point_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (reason_id) REFERENCES point_reason(reason_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE celebrity_request(
@@ -84,3 +95,13 @@ CREATE TABLE celebrity_request(
     FOREIGN KEY (requester_id) REFERENCES users(user_id)
 );
 
+CREATE EVENT IF NOT EXISTS reset_daily_values
+ON SCHEDULE EVERY 1 DAY STARTS '2023-05-14 00:00:00'
+DO
+  UPDATE users
+  SET is_attended = FALSE, 
+      is_visited = FALSE, 
+      is_wiki_edited = 0;
+
+
+SET GLOBAL event_scheduler = ON;
