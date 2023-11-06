@@ -62,7 +62,7 @@ ASKu의 입실렌티 이벤트 프로젝트는 [asku.wiki](http://asku.wiki) 메
 
 # 5. 아키텍쳐
 
-![ASKu-IPSELENTI-Architecture](https://file.notion.so/f/s/78f6fd15-af16-49d0-ae07-2f9db8aa5e02/Untitled.png?id=aa6b8d76-70f5-4de5-9c7b-f51c7b0907c7&table=block&spaceId=5e517d7e-f392-416d-a565-b2e2c4a7a2d7&expirationTimestamp=1698660000000&signature=wmYulIAX52XkSEsVb8FUV_wTeoKfOtwHFVYO5gNvDs8&downloadName=Untitled.png)
+![ASKu-IPSELENTI-Architecture](https://file.notion.so/f/s/78f6fd15-af16-49d0-ae07-2f9db8aa5e02/Untitled.png?id=aa6b8d76-70f5-4de5-9c7b-f51c7b0907c7&table=block&spaceId=5e517d7e-f392-416d-a565-b2e2c4a7a2d7&expirationTimestamp=1699380000000&signature=934RuXZOxytcdYVlSQXwDWo9Y1xbBkfLL8EtjMdzoOI&downloadName=Untitled.png)
 
 # 6. 백엔드
 
